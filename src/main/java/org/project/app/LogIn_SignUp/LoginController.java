@@ -1,4 +1,4 @@
-package org.project.app.application;
+package org.project.app.LogIn_SignUp;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
-import org.project.app.application.Connection.DBHandler;
+import org.project.app.Connection.DBHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Window;
 import java.io.File;

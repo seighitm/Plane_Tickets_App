@@ -1,4 +1,4 @@
-package org.project.app.application.Connection;
+package org.project.app.Connection;
 
 public class Configs {
     protected static String dbhost = "localhost";
