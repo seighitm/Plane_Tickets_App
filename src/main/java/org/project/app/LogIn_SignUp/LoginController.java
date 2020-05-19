@@ -202,11 +202,11 @@ public class LoginController extends Window implements Initializable {
 
     @FXML
     void signUp(MouseEvent mouseEvent) throws IOException {
-        setPage(login_page, "/Page.fxml");
+        setPage(login_page, "/LogIn_SignUp/SignUp.fxml");
     }
 
     @FXML
-    void skip(MouseEvent event) throws IOException {
+    void skip(MouseEvent event)  {
 
     }
 
