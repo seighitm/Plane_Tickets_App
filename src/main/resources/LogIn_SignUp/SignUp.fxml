@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<AnchorPane fx:id="signup_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.LogIn_SignUp.SignUpController">
+   <children>
+      <ImageView layoutX="485.0" layoutY="163.0">
+         <image>
+            <Image url="@../image/user.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="485.0" layoutY="216.0">
+         <image>
+            <Image url="@../image/key.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="28.0" fitWidth="30.0" layoutX="485.0" layoutY="279.0">
+         <image>
+            <Image url="@../image/email.png" />
+         </image>
+      </ImageView>
+      <Pane prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #2D3447;">
+         <children>
+            <ImageView fitHeight="193.0" fitWidth="200.0" layoutX="100.0" layoutY="158.0">
+               <image>
+                  <Image url="@../image/aviaTrans.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="138.0" layoutY="332.0" prefHeight="38.0" prefWidth="67.0" text="Avia" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
+               <font>
+                  <Font name="System Bold" size="26.0" />
+               </font>
+            </Label>
+            <Label layoutX="196.0" layoutY="332.0" prefHeight="38.0" prefWidth="67.0" text="Trans" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
+            <Line endX="144.0" layoutX="176.0" layoutY="52.0" opacity="0.5" startX="-100.0" stroke="WHITE" />
+            <Line endX="144.0" layoutX="172.0" layoutY="520.0" opacity="0.5" startX="-100.0" stroke="WHITE" />
+         </children>
+      </Pane>
+      <TextField fx:id="username_field" layoutX="522.0" layoutY="150.0" prefHeight="25.0" prefWidth="220.0" promptText="Username"/>
+      <PasswordField fx:id="password_field" layoutX="526.0" layoutY="215.0" prefHeight="25.0" prefWidth="220.0" promptText="Password" />
+      <TextField fx:id="email_field" layoutX="526.0" layoutY="280.0" prefHeight="25.0" prefWidth="220.0" promptText="Email" />
+      <TextField fx:id="phone_field" layoutX="526.0" layoutY="345.0" prefHeight="25.0" prefWidth="220.0" promptText="Phone number" />
+      <Button fx:id="id_signup" layoutX="526.0" layoutY="409.0" onMouseClicked="#signUp" prefHeight="25.0" prefWidth="220.0" text="Sign Up" />
+      <RadioButton fx:id="worker_radioButton" layoutX="526.0" layoutY="467.0" style="--selected-color: #2196f3;" text="Worker">
+         <toggleGroup>
+            <ToggleGroup fx:id="g2" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="customer_radioButton" layoutX="667.0" layoutY="467.0" style="--selected-color: #2196f3;" text="Customer" toggleGroup="$g2" />
+      <Hyperlink fx:id="id_login" layoutX="696.0" layoutY="71.0" onMouseClicked="#login" text="Sign In" />
+      <Label fx:id="success_label" layoutX="568.0" layoutY="532.0" text="Successful registration" textFill="#e45d64">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="28.0" fitWidth="30.0" layoutX="485.0" layoutY="344.0">
+         <image>
+            <Image url="@../image/mobilePhone.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="min_close" layoutX="762.0" layoutY="14.0" onMouseClicked="#close">
+         <image>
+            <Image url="@../image/interfac.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="730.0" layoutY="14.0" onMouseClicked="#minimize">
+         <image>
+            <Image url="@../image/circl.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
