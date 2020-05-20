@@ -81,7 +81,7 @@ public class SignUpController implements Initializable{
         String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         Pattern pattern0 = Pattern.compile(regex);
         Matcher matcher0 = pattern0.matcher(email_field.getText());
-        regex = "^[1-9]{1}[0-9]{3,14}$";
+        regex = "^[0-9]{1}[0-9]{3,14}$";
         Pattern pattern1 = Pattern.compile(regex);
         Matcher matcher1 = pattern1.matcher(phone_field.getText());
         if(verification() && matcher1.matches() && matcher0.matches() && getAccount()!=0)

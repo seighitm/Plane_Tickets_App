@@ -102,7 +102,7 @@ public class LoginController extends Window implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         handler = new DBHandler();
         connection = handler.getConnection();
-        readFile();
+        //readFile();
         check_remember.setSelected(true);
         if(!username_field.getText().isEmpty() && !password_field.getText().isEmpty() && getAccount()!=0 && automation_login==0) {
             aux=1;
