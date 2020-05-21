@@ -172,7 +172,7 @@ public class LoginController extends Window implements Initializable {
     {
         if(worker_button.isSelected()) {
             pers = 1;
-            patch = "/Page.fxml";
+            patch = "/Worker/HomeWorker.fxml";
         } else if (customer_button.isSelected()) {
             pers = 2;
             patch = "/Page.fxml";
