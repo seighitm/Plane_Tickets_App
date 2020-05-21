@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="home_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.HomeWorkerController">
+   <children>
+      <Pane prefHeight="600.0" prefWidth="230.0" style="-fx-background-color: #2D3447;">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="65.0" layoutY="5.0">
+               <image>
+                  <Image url="@../image/aviaTrans.png" />
+               </image>
+            </ImageView>
+            <Line endX="41.5" layoutX="142.0" layoutY="119.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+            <Label fx:id="id_lab" layoutX="31.0" layoutY="160.0" prefHeight="31.0" prefWidth="171.0" text="Personal cabinet" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Label>
+            <Line endX="41.5" layoutX="142.0" layoutY="499.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+            <Button fx:id="exit_button" layoutX="40.0" layoutY="535.0" onMouseClicked="#exit" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="EXIT" />
+            <Button fx:id="id_news" layoutX="41.0" layoutY="395.0" onMouseClicked="#news" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="News">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="id_tick" layoutX="41.0" layoutY="340.0" onMouseClicked="#buy_ticket" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Tickets purchased">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="41.0" layoutY="285.0" onMouseClicked="#view_flights" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="View all flight">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="id_add" layoutX="41.0" layoutY="230.0" onMouseClicked="#add_flight" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Add flight">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+
+         </children>
+      </Pane>
+      <AnchorPane fx:id="main_page" layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
+         <children>
+            <ImageView fitHeight="600.0" fitWidth="570.0">
+               <image>
+                  <Image url="@../image/workerHome.png" />
+               </image>
+            </ImageView>
+            <Pane layoutX="502.0" prefHeight="59.0" prefWidth="64.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
