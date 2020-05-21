@@ -1,7 +1,7 @@
-package main.java.org.project.app.Workers;
+package org.project.app.Workers;
 
-import Connection.DBHandler;
-import Controllers.Sign.LoginController;
+import org.project.app.Connection.DBHandler;
+import org.project.app.LogIn_SignUp.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
