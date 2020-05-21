@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Button?>
+<AnchorPane prefHeight="600.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.AddFlightsController">
+   <children>
+      <Label layoutX="224.0" layoutY="113.0" text="Add a flight">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="field_location" layoutX="200.0" layoutY="163.0" prefHeight="25.0" prefWidth="171.0" promptText="Location" />
+      <TextField fx:id="field_destination" layoutX="200.0" layoutY="213.0" prefHeight="25.0" prefWidth="171.0" promptText="Destination" />
+      <TextField fx:id="field_price" layoutX="200.0" layoutY="263.0" prefHeight="25.0" prefWidth="171.0" promptText="Price" />
+      <DatePicker fx:id="field_date" layoutX="200.0" layoutY="313.0" promptText="Date" />
+      <TextField fx:id="field_hours" layoutX="200.0" layoutY="363.0" prefHeight="25.0" prefWidth="171.0" promptText="Hour" />
+      <TextField fx:id="field_seats" layoutX="200.0" layoutY="413.0" prefHeight="25.0" prefWidth="171.0" promptText="Seats" />
+      <Hyperlink fx:id="id_clear1" layoutX="200.0" layoutY="463.0" onMouseClicked="#clear_textField" text="Clear" />
+      <Button fx:id="id_ok1" layoutX="258.0" layoutY="463.0" onMouseClicked="#add_flight" prefHeight="25.0" prefWidth="110.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Add" />
+   </children>
+
+</AnchorPane>
