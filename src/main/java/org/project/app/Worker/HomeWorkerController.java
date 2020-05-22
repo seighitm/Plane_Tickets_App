@@ -45,7 +45,7 @@ public class HomeWorkerController implements  Initializable{
 
     @FXML
     void view_flights(MouseEvent event) throws IOException {
-        setPage(home_page, "/Page.fxml");
+        setPage(home_page, "/Worker/ViewUpdateDeleteFlights.fxml");
     }
 
     @FXML

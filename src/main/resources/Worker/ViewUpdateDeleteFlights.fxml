@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="view_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.ViewUpdateDeleteFlightsController">
+    <children>
+        <Label fx:id="delete_label" layoutX="60.0" layoutY="520.0" text="Delete Succesfull">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+        <Label fx:id="notFound_label" layoutX="82.0" layoutY="520.0" text="Not found">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+        <Label fx:id="update_label" layoutX="57.0" layoutY="520.0" text="Update Succesfull">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+        <Label fx:id="notID_label" layoutX="36.0" layoutY="520.0" text="You did not enter an ID!">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+      <Pane layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
+         <children>
+              <TableView fx:id="table" prefHeight="550.0" prefWidth="570.0">
+                  <columns>
+                      <TableColumn fx:id="id_table" prefWidth="26.0" text="ID" />
+                      <TableColumn fx:id="location_table" minWidth="0.0" prefWidth="100.0" text="Location" />
+                      <TableColumn fx:id="destination_table" prefWidth="123.0" text="Destination" />
+                      <TableColumn fx:id="date_table" prefWidth="70.0" text="Date" />
+                      <TableColumn fx:id="price_table" prefWidth="65.0" text="Price" />
+                      <TableColumn fx:id="hour_table" minWidth="3.0" prefWidth="62.0" text="Hour" />
+                      <TableColumn fx:id="seats_table" prefWidth="59.0" text="Seats" />
+                      <TableColumn fx:id="action_table" minWidth="0.0" prefWidth="64.0" />
+                  </columns>
+              </TableView>
+            <TextField fx:id="destinationSearch_field"  layoutX="278.0" layoutY="558.0" prefHeight="25.0" prefWidth="135.0" promptText="Destination" />
+            <TextField fx:id="locationSearch_field"  layoutX="145.0" layoutY="558.0" prefHeight="25.0" prefWidth="125.0" promptText="Destination" text="Location" />
+            <Button fx:id="id_ref" layoutY="558.0" onMouseClicked="#refresh_button" prefHeight="30.0" prefWidth="69.0" style="-fx-background-color: #7eb5ec;" text="Refresh">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="id_update2" layoutX="77.0" layoutY="558.0" onMouseClicked="#search_flights" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #7eb5ec;" text="Search">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
+            <TextField fx:id="dateSearch_field"  layoutX="421.0" layoutY="558.0" prefHeight="25.0" prefWidth="135.0" promptText="Destination" text="Date" />
+         </children>
+      </Pane>
+      <TextField fx:id="destination_field" layoutX="33.0" layoutY="175.0" prefHeight="25.0" prefWidth="166.0" promptText="Destination" />
+      <TextField fx:id="location_field"  layoutX="33.0" layoutY="220.0" prefHeight="25.0" prefWidth="166.0" promptText="Location" />
+      <TextField fx:id="price_field" layoutX="33.0" layoutY="265.0" prefHeight="25.0" prefWidth="166.0" promptText="Price" />
+      <TextField fx:id="year_field"  layoutX="139.0" layoutY="310.0" prefHeight="25.0" prefWidth="60.0" promptText="Year" />
+      <TextField fx:id="month_field"  layoutX="84.0" layoutY="310.0" prefHeight="25.0" prefWidth="49.0" promptText="Month" />
+      <TextField fx:id="day_field" layoutX="35.0" layoutY="310.0" prefHeight="25.0" prefWidth="43.0" promptText="Day" />
+      <TextField fx:id="hour_field"  layoutX="33.0" layoutY="350.0" prefHeight="25.0" prefWidth="166.0" promptText="Hour" />
+      <TextField fx:id="seats_field" layoutX="33.0" layoutY="395.0" prefHeight="25.0" prefWidth="166.0" promptText="Seats" />
+      <Button fx:id="search_button" layoutX="33.0" layoutY="130.0" onMouseClicked="#search_byID" style="-fx-background-color: #7eb5ec;" text="Search by ID">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <TextField fx:id="id_field"  layoutX="138.0" layoutY="129.0" prefHeight="25.0" prefWidth="60.0" promptText="ID" />
+      <Button fx:id="id_back" layoutX="33.0" layoutY="28.0" onMouseClicked="#back" style="-fx-background-color: #7eb5ec;" text="BACK">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="delete_button" layoutX="119.0" layoutY="440.0" onMouseClicked="#delete" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #7eb5ec;" text="Delete">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="id_update" layoutX="34.0" layoutY="440.0" onMouseClicked="#update" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #7eb5ec;" text="Update">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+    </children>
+</AnchorPane>
