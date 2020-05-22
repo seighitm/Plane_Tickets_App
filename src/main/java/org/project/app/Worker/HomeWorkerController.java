@@ -35,12 +35,12 @@ public class HomeWorkerController implements  Initializable{
 
     @FXML
     void add_flight(MouseEvent event) throws IOException {
-        setPage(main_page, "/Page.fxml");
+        setPage(main_page, "/Worker/AddFlight.fxml");
     }
 
     @FXML
     void news(MouseEvent event) throws IOException {
-        setPage(main_page, "/Page.fxml");
+        setPage(main_page, "/Worker/AddNews.fxml");
     }
 
     @FXML

@@ -107,7 +107,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
 
     @FXML
     void back(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Worker/HomeWorker.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/Worker/HomeWorker.fxml"));
         view_page.getChildren().setAll(pane);
     }
 
@@ -305,7 +305,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
         notID_label.setVisible(false);
         if(!id_field.getText().equals(""))
         {
-            if(verification()==true)
+            if(verification())
             {
                 String insert = "DELETE FROM tab2 WHERE ID=?";
                 try {
@@ -333,7 +333,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     public void update(MouseEvent mouseEvent) {
         if(!id_field.getText().equals(""))
         {
-            if (verification() == true)
+            if (verification())
             {
                 if(id_field.getText().equals("")){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
