@@ -32,17 +32,17 @@ public class HomeCustomerController {
 
     @FXML
     void gen_inf(MouseEvent event) throws IOException {
-        setPage(home_page, "/FXML/User/GeneralInformation.fxml");
+        setPage(home_page, "/Page.fxml");
     }
 
     @FXML
     void my_tickets(MouseEvent event) throws IOException {
-        setPage(main_page, "/FXML/User/MyTicket.fxml");
+        setPage(main_page, "/Page.fxml");
     }
 
     @FXML
     void view_flights(MouseEvent event) throws IOException {
-        setPage(home_page, "/FXML/User/ViewFlights.fxml");
+        setPage(home_page, "/Page.fxml");
     }
 
     @FXML
