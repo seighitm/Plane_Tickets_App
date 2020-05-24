@@ -5,7 +5,6 @@ import javafx.scene.control.*;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.project.app.Connection.DBHandler;
-import org.project.app.LogIn_SignUp.LoginController;
 import org.project.app.Model.ModelViewFlight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -96,7 +95,6 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     public static String loc, des, dat;
 
     ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
-    LoginController log = new LoginController();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

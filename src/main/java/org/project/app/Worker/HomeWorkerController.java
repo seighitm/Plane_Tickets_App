@@ -49,7 +49,7 @@ public class HomeWorkerController implements  Initializable{
     }
 
     @FXML
-    void buy_ticket(MouseEvent event) throws IOException {
+    void cancel_ticket(MouseEvent event) throws IOException {
         setPage(main_page, "/Page.fxml");
     }
 
