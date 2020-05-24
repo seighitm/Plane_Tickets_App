@@ -66,6 +66,32 @@ public class ViewFlightsController implements Initializable {
         view_flight();
     }
 
+    @FXML
+    void search_flight(MouseEvent event) {
+        try {
+            table.getItems().clear();
+            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats>0");
+            pst.setString(1, destination_field.getText());
+            pst.setString(2, location_field.getText());
+            pst.setString(3, date_field.getText());
+            int count = 0;
+            try(ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
+                    count++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void refresh_button(MouseEvent mouseEvent) {
+        refresh_automation();
+    }
+
     public void refresh_automation() {
         table.getItems().clear();
         try {
@@ -139,12 +165,6 @@ public class ViewFlightsController implements Initializable {
         table.setItems(oblist);
     }
 
-    public void refresh_button(MouseEvent mouseEvent) {
-    }
-
     public void back(MouseEvent mouseEvent) {
-    }
-
-    public void search_flight(MouseEvent mouseEvent) {
     }
 }
