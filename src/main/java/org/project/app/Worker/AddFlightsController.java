@@ -1,14 +1,12 @@
 package org.project.app.Worker;
 
 import org.project.app.Connection.DBHandler;
-import org.project.app.LogIn_SignUp.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,8 +44,6 @@ public class AddFlightsController implements  Initializable{
     @FXML
     private Connection connection;
 
-    LoginController log = new LoginController();
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
@@ -57,7 +53,7 @@ public class AddFlightsController implements  Initializable{
     @FXML
     void add_flight(MouseEvent event) {
         try {
-            if(verification()==true) {
+            if(verification()) {
                 String insert = "Insert INTO tab2(Destination, Location, Date, Price, Hour, Seats)" + "Values(?,?,?,?,?,?)";
                 pst = connection.prepareStatement(insert);
                 String date = field_date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -90,7 +86,7 @@ public class AddFlightsController implements  Initializable{
         field_seats.clear();
     }
 
-    boolean verification() throws SQLException {
+    boolean verification(){
         String insert = "SELECT * FROM tab2 where Destination=? and Location=? and Date=? and Price=? and Hour=? and Seats=?";
         int count = 0;
         try {

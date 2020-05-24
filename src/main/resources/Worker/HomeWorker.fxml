@@ -31,7 +31,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="id_tick" layoutX="41.0" layoutY="340.0" onMouseClicked="#buy_ticket" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Tickets purchased">
+            <Button fx:id="id_tick" layoutX="41.0" layoutY="340.0" onMouseClicked="#cancel_ticket" prefHeight="25.0" prefWidth="143.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Tickets purchased">
                <font>
                   <Font size="14.0" />
                </font>

@@ -10,16 +10,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Optional;
 
 public class HomeCustomerController {
 
     LoginController loginController = new LoginController();
-
-    private double xOffset = 0;
-    private double yOffset = 0;
 
     @FXML
     private AnchorPane home_page;
@@ -32,7 +28,7 @@ public class HomeCustomerController {
 
     @FXML
     void gen_inf(MouseEvent event) throws IOException {
-        setPage(home_page, "/Page.fxml");
+        setPage(home_page, "/Client/GeneralInformation.fxml");
     }
 
     @FXML
@@ -42,13 +38,13 @@ public class HomeCustomerController {
 
     @FXML
     void view_flights(MouseEvent event) throws IOException {
-        setPage(home_page, "/Page.fxml");
+        setPage(home_page, "/Client/ViewFlights.fxml");
     }
 
     @FXML
     void exit(MouseEvent event) throws IOException{
         if (allert_window(1)){
-            setPage(home_page, "/FXML/Sign/LoginMain.fxml");
+            setPage(home_page, "/LogIn_SignUp/LogIn.fxml");
         }
         loginController.setAutomation_login(2);
     }

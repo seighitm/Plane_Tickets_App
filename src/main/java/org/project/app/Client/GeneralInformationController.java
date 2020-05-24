@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.project.app.LogIn_SignUp.LoginController;
-
 import java.io.IOException;
 
 public class GeneralInformationController {
@@ -20,23 +19,23 @@ public class GeneralInformationController {
     @FXML
     void back(MouseEvent event) throws IOException {
         if(log.getPers()==2)
-            log.setPage(infoGen_page, "/FXML/User/HomeCustomer.fxml");
+            log.setPage(infoGen_page, "/Client/HomeCustomer.fxml");
         else
-            log.setPage(infoGen_page, "/FXML/Skip/HomeSkip.fxml");
+            log.setPage(infoGen_page, "/Page.fxml");
     }
 
     @FXML
     void contact(MouseEvent event) throws IOException {
-        log.setPage(page, "/FXML/User/GenInfo/Contact.fxml");
+        log.setPage(page, "/Client/GenInfo/Contact.fxml");
     }
 
     @FXML
     void hystory(MouseEvent event) throws IOException {
-        log.setPage(page, "/FXML/User/GenInfo/Hystory.fxml");
+        log.setPage(page, "/Client/GenInfo/Hystory.fxml");
     }
 
     @FXML
     void offers(MouseEvent event) throws IOException {
-        log.setPage(page, "/FXML/User/GenInfo/News.fxml");
+        log.setPage(page, "/Client/GenInfo/News.fxml");
     }
 }

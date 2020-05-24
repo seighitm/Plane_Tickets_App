@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.project.app.Connection.DBHandler;
 import org.project.app.LogIn_SignUp.LoginController;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
