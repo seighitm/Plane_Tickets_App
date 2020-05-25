@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import java.net.URL?>
+<AnchorPane fx:id="id_curseView" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Client.MyTicketController">
+   <children>
+      <TableView fx:id="table" prefHeight="600.0" prefWidth="600.0">
+        <columns>
+          <TableColumn fx:id="id_table" prefWidth="34.0" text="ID" />
+          <TableColumn fx:id="location_table" minWidth="0.0" prefWidth="116.0" text="Locatia" />
+            <TableColumn fx:id="destination_table" prefWidth="130.0" text="Destinatia" />
+            <TableColumn fx:id="date_table" prefWidth="106.0" text="Data" />
+            <TableColumn fx:id="price_table" prefWidth="87.0" text="Pret" />
+            <TableColumn fx:id="hour_table" prefWidth="61.0" text="Ore" />
+            <TableColumn fx:id="seats_table" prefWidth="65.0" text="Nr. locuri" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
