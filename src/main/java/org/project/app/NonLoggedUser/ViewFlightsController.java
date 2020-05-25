@@ -68,7 +68,7 @@ public class ViewFlightsController implements Initializable {
 
     @FXML
     void back(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/LogIn_SignUp/LogIn.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/NonLoggedUser/HomeNonLoggedUser.fxml"));
         view_page.getChildren().setAll(pane);
         try {
             connection.close();

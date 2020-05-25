@@ -17,6 +17,11 @@ public class HomeNonLoggedUser {
     }
 
     @FXML
+    void gen_inf(MouseEvent event) throws IOException {
+        setPage(home_page, "/Client/GeneralInformation.fxml");
+    }
+
+    @FXML
     void exit(MouseEvent event) throws IOException {
             setPage(home_page, "/LogIn_SignUp/LogIn.fxml");
     }

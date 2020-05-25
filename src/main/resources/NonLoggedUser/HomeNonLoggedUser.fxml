@@ -39,6 +39,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Button fx:id="id_inf" layoutX="44.0" layoutY="350.0" onMouseClicked="#gen_inf" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="General informaton">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
             <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="71.0" layoutY="5.0">
                <image>
                   <Image url="@../image/aviaTrans.png" />
