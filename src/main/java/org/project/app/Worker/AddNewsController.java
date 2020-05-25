@@ -77,7 +77,7 @@ public class AddNewsController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alertt.png"));
+        stage.getIcons().add(new Image("image/alert.png"));
         if(index==1) {
             alert.setContentText("You have not filled in all the fields!");
         }

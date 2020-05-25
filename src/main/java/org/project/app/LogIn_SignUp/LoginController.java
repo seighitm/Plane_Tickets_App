@@ -175,10 +175,10 @@ public class LoginController extends Window implements Initializable {
             patch = "/Worker/HomeWorker.fxml";
         } else if (customer_button.isSelected()) {
             pers = 2;
-            patch = "/Page.fxml";
+            patch = "/Client/HomeCustomer.fxml";
         } else if (!customer_button.isSelected() && !worker_button.isSelected()) {
             pers = 3;
-            patch = "/Page.fxml";
+            patch = "/Admin/HomeAdmin.fxml";
         }
         return pers;
     }
@@ -206,8 +206,8 @@ public class LoginController extends Window implements Initializable {
     }
 
     @FXML
-    void skip(MouseEvent event)  {
-
+    void skip(MouseEvent event) throws IOException  {
+        setPage(login_page, "/NonLoggedUser/HomeNonLoggedUser.fxml");
     }
 
     public void setPage(AnchorPane page, String patch) throws IOException {
@@ -283,7 +283,7 @@ public class LoginController extends Window implements Initializable {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alertt.png"));
+        stage.getIcons().add(new Image("image/alert.png"));
 
         if(index==1) {
             alert.setContentText("Account is not validated.\nPlease try again later.");

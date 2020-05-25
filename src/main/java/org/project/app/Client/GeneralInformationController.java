@@ -21,7 +21,7 @@ public class GeneralInformationController {
         if(log.getPers()==2)
             log.setPage(infoGen_page, "/Client/HomeCustomer.fxml");
         else
-            log.setPage(infoGen_page, "/Page.fxml");
+            log.setPage(infoGen_page, "/NonLoggedUser/HomeNonLoggedUser.fxml");
     }
 
     @FXML

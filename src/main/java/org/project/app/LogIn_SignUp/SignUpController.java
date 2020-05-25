@@ -72,7 +72,7 @@ public class SignUpController implements Initializable{
 
     @FXML
     void login(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/LogIn_SignUp/Login.fxml"));
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/LogIn_SignUp/LogIn.fxml"));
         signup_page.getChildren().setAll(pane);
     }
 
@@ -160,7 +160,7 @@ public class SignUpController implements Initializable{
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alertt.png"));
+        stage.getIcons().add(new Image("image/alert.png"));
         if(index==1){
             alert.setContentText("Phone number is incorrect!");
         }else if(index==2){

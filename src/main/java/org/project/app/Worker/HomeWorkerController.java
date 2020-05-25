@@ -75,7 +75,7 @@ public class HomeWorkerController implements  Initializable{
             alert.setHeaderText("Press the \"Ok\" button if you want to exit, otherwise press the \"Cancel\" button.");
             alert.setContentText("Do you want to go out?");
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image("image/alertt.png"));
+            stage.getIcons().add(new Image("image/alert.png"));
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK)
                 return true;
