@@ -235,7 +235,7 @@ public class ViewFlightsController implements Initializable {
                 "\nData: " + curse.getDate() + "\nOra: " + curse.getHour() + "\nPretul: " + curse.getPrice());
         alert.setContentText("Press the ok button to confirm the purchase of the ticket.");
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alertt.png"));
+        stage.getIcons().add(new Image("image/alert.png"));
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
             return true;

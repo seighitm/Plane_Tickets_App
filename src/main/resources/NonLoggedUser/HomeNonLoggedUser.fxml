@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.Button?>
-<AnchorPane fx:id="home_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.NonLoggedUser.HomeSkipPage">
+<AnchorPane fx:id="home_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.NonLoggedUser.HomeNonLoggedUser">
    <children>
       <AnchorPane fx:id="main_page" layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
          <children>
@@ -35,11 +35,6 @@
                </font>
             </Button>
             <Button fx:id="exit_button" layoutX="44.0" layoutY="535.0" onMouseClicked="#exit" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="BACK">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="id_inf" layoutX="44.0" layoutY="350.0" onMouseClicked="#gen_inf" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="General informaton">
                <font>
                   <Font size="14.0" />
                </font>

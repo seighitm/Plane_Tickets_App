@@ -185,7 +185,7 @@ public class HomeAdminPage implements Initializable {
             alert.setHeaderText("Press the \"Ok\" button if you want to exit, otherwise press the \"Cancel\" button.");
             alert.setContentText("Do you want to go out?");
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image("image/alertt.png"));
+            stage.getIcons().add(new Image("image/alert.png"));
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK)
                 return true;
@@ -196,7 +196,7 @@ public class HomeAdminPage implements Initializable {
     public void openNewPage(Parent root, Stage stage)
     {
         try {
-            root = FXMLLoader.load(getClass().getResource("/FXML/Sign/LoginMain.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/LogIn_SignUp/LogIn.fxml"));
             root.setStyle("-fx-effect: innershadow(gaussian, #039ed3, 2, 1.0, 0, 0);");
             Scene scene = new Scene(root);
             stage.setScene(scene);

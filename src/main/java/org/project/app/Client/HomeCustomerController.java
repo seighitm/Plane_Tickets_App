@@ -53,7 +53,7 @@ public class HomeCustomerController {
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alertt.png"));
+        stage.getIcons().add(new Image("image/alert.png"));
         if(index==1)
         {
             alert.setTitle("Confirmation Dialog");
