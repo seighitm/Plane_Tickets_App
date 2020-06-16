@@ -1,18 +1,20 @@
 package org.project.app.Client;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-import org.project.app.Connection.DBHandler;
-import org.project.app.LogIn_SignUp.LoginController;
-import org.project.app.Model.ModelViewFlight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.net.URL;
@@ -20,84 +22,95 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.scene.input.MouseEvent;
+import java.util.TimeZone;
+import javafx.stage.Stage;
+import org.project.app.Connection.DBHandler;
+import org.project.app.LogIn_SignUp.LoginController;
+import org.project.app.Model.ModelViewFlight;
+import javafx.util.Callback;
 
 public class ViewFlightsController implements Initializable {
 
     @FXML
-    private AnchorPane view_page;
-
+    private AnchorPane anchorPane;
     @FXML
     private TableView<ModelViewFlight> table;
     @FXML
-    private TableColumn<ModelViewFlight, Integer> id_table;
+    private TableColumn<ModelViewFlight, Integer> idTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> location_table;
+    private TableColumn<ModelViewFlight, String> locationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> destination_table;
+    private TableColumn<ModelViewFlight, String> destinationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> date_table;
+    private TableColumn<ModelViewFlight, String> dateTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> price_table;
+    private TableColumn<ModelViewFlight, String> priceTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> hour_table;
+    private TableColumn<ModelViewFlight, String> hourTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> seats_table;
+    private TableColumn<ModelViewFlight, String> seatsTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> button_table;
+    private TableColumn<ModelViewFlight, String> buttonTable;
+    @FXML
+    private TextField dateField;
+    @FXML
+    private TextField destinationField;
+    @FXML
+    private TextField locationField;
+    @FXML
+    private ImageView minimizeCloseIcon;
 
+    private String EmailSend;
     private DBHandler handler;
     private PreparedStatement pst;
     private Connection connection;
 
-    @FXML
-    private TextField date_field;
-    @FXML
-    private TextField destination_field;
-    @FXML
-    private TextField location_field;
-
+    LoginController loginController = new LoginController();
     ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
-    LoginController log = new LoginController();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
         connection = handler.getConnection();
-        view_flight();
+        viewFlight();
     }
 
     @FXML
-    void back(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/User/HomeCustomer.fxml"));
-        view_page.getChildren().setAll(pane);
+    void back(){
         try {
+            AnchorPane pane = FXMLLoader.load(getClass().getResource("/Client/HomeCustomer.fxml"));
+            anchorPane.getChildren().setAll(pane);
             connection.close();
             pst.close();
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         }
     }
 
     @FXML
-    void search_flight(MouseEvent event) {
+    void searchFlight() {
         try {
             table.getItems().clear();
-            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats>0");
-            pst.setString(1, destination_field.getText());
-            pst.setString(2, location_field.getText());
-            pst.setString(3, date_field.getText());
-            int count = 0;
+            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats!=? and Date>?");
+            pst.setString(1, destinationField.getText());
+            pst.setString(2, locationField.getText());
+            pst.setString(3, dateField.getText());
+            pst.setInt(4, 0);
+            pst.setString(5, timeZone());
+            int nrRecords = 0;
             try(ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
-                    count++;
+                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
+                    nrRecords++;
                 }
             }
-            if(count == 0) {
-                allertWindow(1);
+            if(nrRecords == 0) {
+                alertWindow(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,47 +119,58 @@ public class ViewFlightsController implements Initializable {
     }
 
     @FXML
-    public void refresh_button(MouseEvent mouseEvent) {
-        refresh_automation();
+    public void refreshButton() {
+        refreshAutomation();
     }
 
-    public void refresh_automation() {
+    public void refreshAutomation() {
         table.getItems().clear();
         try {
-            pst = connection.prepareStatement("SELECT * from tab2");
+            pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
+            pst.setInt(1, 0);
+            pst.setString(2, timeZone());
             ResultSet rs = pst.executeQuery();
-            while(rs.next()) {
-                if (rs.getInt("Seats") > 0) {
-                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
-                }
+            while(rs.next()) { {
+                oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
+            }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
+        idTable.setCellValueFactory(new PropertyValueFactory("ID"));
+        locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
+        destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
+        dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
+        priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
+        hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
+        seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
 
-        table.setItems(oblist);
     }
 
-    public void view_flight()
-    {
-        refresh_automation();
 
+    public String timeZone() {
+        TimeZone tz = TimeZone.getTimeZone("Europe/Moscow");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        dateFormat.setTimeZone(tz);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String mark = dateFormat.format(calendar.getTime());
+        return mark;
+    }
+
+    public void viewFlight()
+    {
+        refreshAutomation();
         Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>> cellFactory
                 = //
                 new Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>>() {
                     @Override
                     public TableCell call(final TableColumn<ModelViewFlight, String> param) {
                         final TableCell<ModelViewFlight, String> cell = new TableCell<ModelViewFlight, String>() {
-
-                            final Button btn = new Button("BUY");
+                            final Button button = new Button("BUY");
 
                             @Override
                             public void updateItem(String item, boolean empty) {
@@ -155,27 +179,11 @@ public class ViewFlightsController implements Initializable {
                                     setGraphic(null);
                                     setText(null);
                                 } else {
-                                    btn.setOnAction(event -> {
+                                    button.setOnAction(event -> {
                                         ModelViewFlight curse = getTableView().getItems().get(getIndex());
-                                        String insert = "UPDATE tab2 SET Seats=? WHERE ID=?";
-                                        try {
-                                            pst = connection.prepareStatement(insert);
-                                            int aux = curse.getSeats()-1;
-                                            curse.setSeats(aux);
-                                            pst.setInt(1, curse.getSeats());
-                                            pst.setInt(2, curse.getID());
-
-                                            if(allert_ConfirmationWindow(curse)){
-                                                pst.executeUpdate();
-                                                add_myFlight(curse.getID());
-                                                refresh_automation();
-                                            }
-
-                                        } catch (SQLException e) {
-                                            e.printStackTrace();
-                                        }
+                                        updateNrTickets(curse);
                                     });
-                                    setGraphic(btn);
+                                    setGraphic(button);
                                     setText(null);
                                 }
                             }
@@ -183,23 +191,38 @@ public class ViewFlightsController implements Initializable {
                         return cell;
                     }
                 };
-        button_table.setCellFactory(cellFactory);
-
+        buttonTable.setCellFactory(cellFactory);
         table.setItems(oblist);
     }
 
-    private String tempEmailSend;
+    void updateNrTickets(ModelViewFlight curse) {
+        String update = "UPDATE tab2 SET Seats=? WHERE ID=?";
+        try {
+            pst = connection.prepareStatement(update);
+            int aux = curse.getSeats()-1;
+            curse.setSeats(aux);
+            pst.setInt(1, curse.getSeats());
+            pst.setInt(2, curse.getID());
+            if(alertConfirmationWindow(curse)){
+                pst.executeUpdate();
+                addMyFlight(curse.getID());
+                refreshAutomation();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-    void add_myFlight(int x)
-    {
+    void addMyFlight(int airID) {
         int temp_userID=0;
         try {
-            pst = connection.prepareStatement("SELECT * from tab1");
+            String select = "SELECT * from tab1";
+            pst = connection.prepareStatement(select);
             ResultSet rs = pst.executeQuery();
             while(rs.next()) {
-                if ((rs.getString("name").equals(log.getTempUserName())) && (rs.getString("email").equals(log.getTempUserEmail()))) {
+                if ((rs.getString("name").equals(loginController.getTempUserName())) && (rs.getString("email").equals(loginController.getTempUserEmail()))) {
                     temp_userID = rs.getInt("idtab1");
-                    tempEmailSend = rs.getString("email");
+                    EmailSend = rs.getString("email");
                 }
             }
         } catch (SQLException e) {
@@ -209,7 +232,7 @@ public class ViewFlightsController implements Initializable {
         String insert = "Insert INTO tab3(id_air, id_user)" + "Values(?,?)";
         try {
             pst = connection.prepareStatement(insert);
-            pst.setInt(1, x);
+            pst.setInt(1, airID);
             pst.setInt(2, temp_userID);
             pst.executeUpdate();
         } catch (SQLException e) {
@@ -217,29 +240,45 @@ public class ViewFlightsController implements Initializable {
         }
     }
 
-    public void allertWindow(int index)
-    {
+    public void alertWindow(int index) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
         if(index==1) {
-            refresh_automation();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
             alert.setContentText("No flights were found!");
-            alert.show();
+            refreshAutomation();
         }
+        alert.show();
     }
 
-    public boolean allert_ConfirmationWindow(ModelViewFlight curse) {
+    public boolean alertConfirmationWindow(ModelViewFlight curse) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Location: " + curse.getLocation() + "\nDestinatia: " + curse.getDestination() +
-                "\nData: " + curse.getDate() + "\nOra: " + curse.getHour() + "\nPretul: " + curse.getPrice());
+        alert.setHeaderText("Location: " + curse.getLocation() + "\nDestination: " + curse.getDestination() +
+                "\nDate: " + curse.getDate() + "\nOHourra: " + curse.getHour() + "\nPrice: " + curse.getPrice());
         alert.setContentText("Press the ok button to confirm the purchase of the ticket.");
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image("image/alert.png"));
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
+           /* EmailSender emailSender = new EmailSender();
+            emailSender.sendEmail(EmailSend, "Location: " + curse.getLocation() + "\nDestinatia: " + curse.getDestination() +
+                    "\nData: " + curse.getDate() + "\nOra: " + curse.getHour() + "\nPretul: " + curse.getPrice());
+            */
             return true;
+
         }
         return false;
+    }
+
+    @FXML
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void minimize() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.setIconified(true);
     }
 }
