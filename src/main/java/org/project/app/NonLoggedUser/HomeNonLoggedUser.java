@@ -3,31 +3,51 @@ package org.project.app.NonLoggedUser;
 import javafx.fxml.FXML;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class HomeNonLoggedUser {
 
     @FXML
-    private AnchorPane home_page;
+    private AnchorPane anchorPane;
+    @FXML
+    private ImageView minimizeCloseIcon;
 
     @FXML
-    void view_flights(MouseEvent event) throws IOException {
-        setPage(home_page, "/NonLoggedUser/ViewFlights.fxml");
+    void generalInformation() {
+        setPage(anchorPane, "/Client/GeneralInformation.fxml");
     }
 
     @FXML
-    void gen_inf(MouseEvent event) throws IOException {
-        setPage(home_page, "/Client/GeneralInformation.fxml");
+    void viewFlights()  {
+        setPage(anchorPane, "/NonLoggedUser/ViewFlights.fxml");
     }
 
     @FXML
-    void exit(MouseEvent event) throws IOException {
-            setPage(home_page, "/LogIn_SignUp/LogIn.fxml");
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.close();
     }
 
-    public void setPage(AnchorPane page, String patch) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource(patch));
+    @FXML
+    void minimize() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    public void setPage(AnchorPane page, String patch) {
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource(patch));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         page.getChildren().setAll(pane);
+    }
+
+    @FXML
+    void exitIcon() {
+        setPage(anchorPane, "/LogIn_SignUp/LogIn.fxml");
     }
 }
