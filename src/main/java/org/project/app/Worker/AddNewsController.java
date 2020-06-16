@@ -5,37 +5,33 @@ import javafx.fxml.FXML;
 import java.sql.Connection;
 import java.io.IOException;
 import java.sql.SQLException;
-import org.project.app.Connection.DBHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.project.app.Connection.DBHandler;
+
 import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
 public class AddNewsController implements Initializable {
 
     @FXML
-    private AnchorPane field_page;
-
+    private AnchorPane anchorPane;
     @FXML
-    private TextField field_title;
-
+    private TextField titleField;
     @FXML
-    private TextArea field_text;
-
+    private TextArea textField;
     @FXML
+    private ImageView minimizeCloseIcon;
+
     private DBHandler handler;
-
-    @FXML
     private PreparedStatement pst;
-
-    @FXML
     private Connection connection;
 
     @Override
@@ -45,34 +41,34 @@ public class AddNewsController implements Initializable {
     }
 
     @FXML
-    void add_news(MouseEvent event) {
-        String insert = "Insert INTO news(title, text)" + "Values(?,?)";
-        if(!field_text.getText().isEmpty() && !field_title.getText().isEmpty()) {
+    void addNews() {
+        String insert = "INSERT INTO news(title, text)" + "Values(?,?)";
+        if(!textField.getText().isEmpty() || !titleField.getText().isEmpty()) {
             try {
                 pst = connection.prepareStatement(insert);
-                pst.setString(1, field_title.getText());
-                pst.setString(2, field_text.getText());
+                pst.setString(1, titleField.getText());
+                pst.setString(2, textField.getText());
                 pst.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }else {
-            allertWindow(1);
+            alertWindow(1);
         }
     }
 
     @FXML
-    void view_news(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/Client/GenInfo/News.fxml"));
-        field_page.getChildren().setAll(pane);
+    void viewNews() {
         try {
+            AnchorPane pane = FXMLLoader.load(getClass().getResource("/Client/GenInfo/News.fxml"));
+            anchorPane.getChildren().setAll(pane);
             connection.close();
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void allertWindow(int index)
+    public void alertWindow(int index)
     {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
@@ -82,5 +78,17 @@ public class AddNewsController implements Initializable {
             alert.setContentText("You have not filled in all the fields!");
         }
         alert.show();
+    }
+
+    @FXML
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void minimize() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.setIconified(true);
     }
 }

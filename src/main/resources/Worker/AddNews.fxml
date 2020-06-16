@@ -3,13 +3,20 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="field_page" prefHeight="600.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.AddNewsController">
+<AnchorPane fx:id="anchorPane" prefHeight="575.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.AddNewsController">
    <children>
-      <TextField fx:id="field_title" layoutX="35.0" layoutY="61.0" prefHeight="25.0" prefWidth="501.0" promptText="Title" />
-      <TextArea fx:id="field_text" layoutX="35.0" layoutY="99.0" prefHeight="445.0" prefWidth="501.0" promptText="Text (max 1500 caracter)" />
-      <Button fx:id="id_add" layoutX="387.0" layoutY="561.0" mnemonicParsing="false" onMouseClicked="#add_news" prefHeight="25.0" prefWidth="149.0" text="Add" />
-      <Button fx:id="id_view" layoutX="211.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#view_news" prefHeight="25.0" prefWidth="149.0" text="View all" />
+      <ImageView fitHeight="575.0" fitWidth="550.0">
+         <image>
+            <Image url="@../image/blue2.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="titleField" layoutX="25.0" layoutY="56.0" prefHeight="25.0" prefWidth="501.0" promptText="Title" />
+      <TextArea fx:id="textField" layoutX="25.0" layoutY="88.0" prefHeight="445.0" prefWidth="501.0" promptText="Text (max 1500 caracter)" />
+      <Button fx:id="id_add" layoutX="377.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#addNews" prefHeight="25.0" prefWidth="149.0" text="Add" />
+      <Button fx:id="id_view" layoutX="201.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#viewNews" prefHeight="25.0" prefWidth="149.0" text="View all" />
    </children>
 </AnchorPane>
