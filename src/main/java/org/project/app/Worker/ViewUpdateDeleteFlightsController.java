@@ -1,98 +1,107 @@
 package org.project.app.Worker;
 
 import javafx.animation.PauseTransition;
-import javafx.scene.control.*;
-import javafx.util.Callback;
-import javafx.util.Duration;
-import org.project.app.Connection.DBHandler;
-import org.project.app.Model.ModelViewFlight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.project.app.Connection.DBHandler;
+import org.project.app.Model.ModelViewFlight;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ViewUpdateDeleteFlightsController implements Initializable{
 
     @FXML
-    private AnchorPane view_page;
-
+    private AnchorPane anchorPage;
     @FXML
-    private TextField location_field;
+    private TextField locationField;
     @FXML
-    private TextField destination_field;
+    private TextField destinationField;
     @FXML
-    private TextField month_field;
+    private TextField monthField;
     @FXML
-    private TextField day_field;
+    private TextField dayField;
     @FXML
-    private TextField year_field;
+    private TextField yearField;
     @FXML
-    private TextField price_field;
+    private TextField priceField;
     @FXML
-    private TextField id_field;
+    private TextField idField;
     @FXML
-    private TextField hour_field;
+    private TextField hourField;
     @FXML
-    private TextField seats_field;
-
+    private TextField minutesField;
     @FXML
-    public Button search_button;
+    private TextField seatsField;
     @FXML
-    public Button delete_button;
-
+    public Button searchButton;
     @FXML
-    private Label update_label;
+    public Button deleteButton;
     @FXML
-    private Label delete_label;
+    private Label updateLabel;
     @FXML
-    private Label notFound_label;
+    private Label deleteLabel;
     @FXML
-    private Label notID_label;
-
+    private Label notFoundLabel;
     @FXML
-    private TextField dateSearch_field;
+    private Label notIdLabel;
     @FXML
-    private TextField locationSearch_field;
+    private TextField dateSearchField;
     @FXML
-    private TextField destinationSearch_field;
-
+    private TextField locationSearchField;
+    @FXML
+    private TextField destinationSearchField;
     @FXML
     private TableView<ModelViewFlight> table;
     @FXML
-    private TableColumn<ModelViewFlight, String> id_table;
+    private TableColumn<ModelViewFlight, String> idTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> destination_table;
+    private TableColumn<ModelViewFlight, String> destinationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> location_table;
+    private TableColumn<ModelViewFlight, String> locationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> date_table;
+    private TableColumn<ModelViewFlight, String> dateTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> price_table;
+    private TableColumn<ModelViewFlight, String> priceTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> hour_table;
+    private TableColumn<ModelViewFlight, String> hourTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> seats_table;
+    private TableColumn<ModelViewFlight, String> seatsTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> action_table;
+    private ImageView minimizeCloseIcon;
 
     private DBHandler handler;
     private PreparedStatement pst;
     private Connection connection;
 
-
-    public static int idd, pre, Hour, Seats;
-    public static String loc, des, dat;
+    public static int Hour, Seats;
 
     ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
 
@@ -100,249 +109,247 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
         connection = handler.getConnection();
-        create_viewTable();
+        createViewTable();
     }
 
     @FXML
-    void back(MouseEvent event) throws IOException {
+    void backButton() throws IOException {
         AnchorPane pane = FXMLLoader.load(getClass().getResource("/Worker/HomeWorker.fxml"));
-        view_page.getChildren().setAll(pane);
+        anchorPage.getChildren().setAll(pane);
     }
 
     @FXML
-    void search_flights(MouseEvent event) {
+    void searchFlightsSystem(MouseEvent event) {
         try {
             table.getItems().clear();
-            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=?");
-            pst.setString(1, destinationSearch_field.getText());
-            pst.setString(2, locationSearch_field.getText());
-            pst.setString(3, dateSearch_field.getText());
-            ResultSet rs = pst.executeQuery();
-            int count = 0;
-            while(rs.next()){
-                oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"),rs.getInt("Seats")));
-                count=count+1;
-            }
-            if(count == 0)
-            {
-                try {
-                    pst = connection.prepareStatement("SELECT * from tab2");
-                    rs = pst.executeQuery();
-                    while(rs.next()){
-                        oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"),rs.getInt("Seats")));
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats!=? and Date>?");
+            pst.setString(1, destinationSearchField.getText());
+            pst.setString(2, locationSearchField.getText());
+            pst.setString(3, dateSearchField.getText());
+            pst.setInt(4, 0);
+            pst.setString(5, timeZone());
+            int nrRecords = 0;
+            try(ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
+                    nrRecords++;
                 }
-                id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-                location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-                destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-                date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-                price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-                hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-                seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-                table.setItems(oblist);
-
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setContentText("Nu a fost gasit nimic!");
-                alert.show();
+            }
+            if(nrRecords == 0) {
+                createViewTable();
+                alertWindows(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-        table.setItems(oblist);
     }
 
-    void create_viewTable()
-    {
-        delete_label.setVisible(false);
-        notFound_label.setVisible(false);
-        update_label.setVisible(false);
-        notID_label.setVisible(false);
+    public void createViewTable() {
+        offVisibleLabel();
         try {
-            pst = connection.prepareStatement("SELECT * from tab2");
+            pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
+            pst.setInt(1, 0);
+            pst.setString(2, timeZone());
             ResultSet rs = pst.executeQuery();
             while(rs.next()){
-                oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"),rs.getInt("Seats")));
+                oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"),rs.getInt("Seats")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-
-        Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>> cellFactory
-                = //
-                new Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>>() {
-
-                    public TableCell call(final TableColumn<ModelViewFlight, String> param) {
-                        final TableCell<ModelViewFlight, String> cell = new TableCell<ModelViewFlight, String>() {
-                            final Button btn = new Button("Select");
-                            public void updateItem(String item, boolean empty) {
-                                super.updateItem(item, empty);
-                                btn.setStyle("-fx-background-radius: 5em; -jfx-background-color: #9ebedd");
-                                if (empty) {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else {
-                                    btn.setOnAction(event -> {
-                                        ModelViewFlight curse = getTableView().getItems().get(getIndex());
-                                        idd = curse.getID();
-                                        loc = curse.getLocation();
-                                        des = curse.getDestination();
-                                        dat = curse.getDate();
-                                        pre = curse.getPrice();
-                                        Hour = curse.getHour();
-                                        Seats = curse.getSeats();
-                                        //////////////////////
-                                        id_field.setText(String.valueOf(curse.getID()));
-                                        destination_field.setText(curse.getDestination());
-                                        location_field.setText(curse.getLocation());
-                                        String[] temp = new String[3];
-                                        int i = 0;
-                                        for (String val : curse.getDate().split("-")) {
-                                            temp[i] = val;
-                                            i++;
-                                        }
-                                        year_field.setText(temp[0]);
-                                        month_field.setText(temp[1]);
-                                        day_field.setText(temp[2]);
-                                        price_field.setText(String.valueOf(curse.getPrice()));
-                                        hour_field.setText(String.valueOf(curse.getHour()));
-                                        seats_field.setText(String.valueOf(curse.getSeats()));
-                                        ///////////////////////
-                                    });
-                                    setGraphic(empty ? null : btn);
-                                    setText(null);
-                                }
-                            }
-
-                        };
-                        return cell;
-                    }
-                };
-        action_table.setCellFactory(cellFactory);
+        idTable.setCellValueFactory(new PropertyValueFactory("ID"));
+        locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
+        destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
+        dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
+        priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
+        hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
+        seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
         table.setItems(oblist);
+        table.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getClickCount() > 1) {
+                selectTableRow();
+            }
+        });
     }
 
+    public void selectTableRow() {
+        if (table.getSelectionModel().getSelectedItem() != null) {
+            ModelViewFlight curse = table.getSelectionModel().getSelectedItem();
+            idField.setText(String.valueOf(curse.getID()));
+            destinationField.setText(curse.getLocation());
+            locationField.setText(curse.getDestination());
+            String[] temp = new String[3];
+            int i = 0;
+            for (String val : curse.getDate().split("-")) {
+                temp[i] = val;
+                i++;
+            }
+            yearField.setText(temp[0]);
+            monthField.setText(temp[1]);
+            dayField.setText(temp[2]);
+            priceField.setText(String.valueOf(curse.getPrice()));
+            i = 0;
+            for (String val : curse.getHour().split(":")) {
+                temp[i] = val;
+                i++;
+            }
+            hourField.setText(temp[0]);
+            if(i==2) minutesField.setText(temp[1]);
+            else  minutesField.setText("00");
+            seatsField.setText(String.valueOf(curse.getSeats()));
+        }
+    }
+
+    @FXML
     public void refresh_button(MouseEvent mouseEvent) {
-        refresh_automatic();
+        setCellTable();
     }
 
-    public void search_byID(MouseEvent mouseEvent) {
-        delete_label.setVisible(false);
-        notFound_label.setVisible(false);
-        update_label.setVisible(false);
-        notID_label.setVisible(false);
-
-        if(!id_field.getText().isEmpty())
-        {
-            String insert = "SELECT * FROM tab2 WHERE ID=?";
-            try {
-                pst = connection.prepareStatement(insert);
-                pst.setInt(1, Integer.parseInt(id_field.getText()));
-                ResultSet rst = pst.executeQuery();
-                if(rst.next()){
-                    destination_field.setText(rst.getString(2));
-                    location_field.setText(rst.getString(3));
+    @FXML
+    public void searchByID(MouseEvent mouseEvent) {
+        offVisibleLabel();
+        int nrRecords = 0;
+        if(!idField.getText().isEmpty()) {
+            for(ModelViewFlight x : oblist) {
+                if (Integer.parseInt(idField.getText())==(x.getID())) {
+                    destinationField.setText(x.getDestination());
+                    locationField.setText(x.getLocation());
                     String[] temp = new String[3];
                     int i = 0;
-                    for (String val : (rst.getString(4)).split("-")) {
+                    for (String val : (x.getDate()).split("-")) {
                         temp[i] = val;
                         i++;
                     }
-                    year_field.setText(temp[0]);
-                    month_field.setText(temp[1]);
-                    day_field.setText(temp[2]);
-                    price_field.setText(String.valueOf(rst.getInt(5)));
-                    hour_field.setText(String.valueOf(rst.getInt(6)));
-                    seats_field.setText(String.valueOf(rst.getInt(7)));
-                } else {
-                    destination_field.clear();
-                    location_field.clear();
-                    year_field.clear();
-                    month_field.clear();
-                    day_field.clear();
-                    price_field.clear();
-                    hour_field.clear();
-                    seats_field.clear();
-                    notFound_label.setVisible(true);
-                    PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-                    visiblePause.setOnFinished(event1 -> notFound_label.setVisible(false));
-                    notFound_label.setVisible(true);
-                    visiblePause.play();
+                    yearField.setText(temp[0]);
+                    monthField.setText(temp[1]);
+                    dayField.setText(temp[2]);
+                    priceField.setText(String.valueOf(x.getPrice()));
+                    i = 0;
+                    for (String val : x.getHour().split(":")) {
+                        temp[i] = val;
+                        i++;
+                    }
+                    hourField.setText(temp[0]);
+                    if(i==2) minutesField.setText(temp[1]);
+                    else  minutesField.setText("00");
+                    seatsField.setText(String.valueOf(x.getSeats()));
+                    nrRecords++;
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            }
+            if(nrRecords == 0) {
+                clearAllField();
             }
         }else{
-            PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-            visiblePause.setOnFinished(event1 -> notID_label.setVisible(false));
-            notID_label.setVisible(true);
-            visiblePause.play();
+            setVisibleLabel(1);
         }
     }
 
-    public void delete(MouseEvent mouseEvent) {
-        delete_label.setVisible(false);
-        notFound_label.setVisible(false);
-        update_label.setVisible(false);
-        notID_label.setVisible(false);
-        if(!id_field.getText().equals(""))
-        {
-            if(verification())
-            {
+    public void setVisibleLabel(int index)
+    {
+        PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
+        if(index == 1) {
+            visiblePause.setOnFinished(event1 -> notIdLabel.setVisible(false));
+            notIdLabel.setVisible(true);
+        }else if(index == 2){
+            visiblePause.setOnFinished(event1 -> notFoundLabel.setVisible(false));
+            notFoundLabel.setVisible(true);
+        }else if(index == 3){
+            visiblePause.setOnFinished(event1 -> deleteLabel.setVisible(false));
+            deleteLabel.setVisible(true);
+        }else if(index == 4){
+            visiblePause.setOnFinished(event1 -> updateLabel.setVisible(false));
+            updateLabel.setVisible(true);
+        }else if(index == 5){
+
+        }
+        visiblePause.play();
+    }
+
+    public void clearAllField(){
+        destinationField.clear();
+        locationField.clear();
+        yearField.clear();
+        monthField.clear();
+        dayField.clear();
+        priceField.clear();
+        hourField.clear();
+        minutesField.clear();
+        seatsField.clear();
+        notFoundLabel.setVisible(true);
+        setVisibleLabel(2);
+    }
+
+    public void offVisibleLabel() {
+        deleteLabel.setVisible(false);
+        notFoundLabel.setVisible(false);
+        updateLabel.setVisible(false);
+        notIdLabel.setVisible(false);
+    }
+
+    public void setCellTable() {
+        oblist = refresh_automatic();
+        table.getItems().clear();
+        idTable.setCellValueFactory(new PropertyValueFactory("ID"));
+        locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
+        destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
+        dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
+        priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
+        hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
+        seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
+        table.setItems(oblist);
+    }
+
+    @FXML
+    public void deleteFlight(MouseEvent mouseEvent) {
+        deleteLabel.setVisible(false);
+        notFoundLabel.setVisible(false);
+        updateLabel.setVisible(false);
+        notIdLabel.setVisible(false);
+        if(!idField.getText().equals("")) {
+            if(verificationIfExistRecord()) {
                 String insert = "DELETE FROM tab2 WHERE ID=?";
                 try {
                     pst = connection.prepareStatement(insert);
-                    pst.setInt(1, Integer.parseInt(id_field.getText()));
+                    pst.setInt(1, Integer.parseInt(idField.getText()));
                     pst.execute();
-                    refresh_automatic();
-
-                    PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-                    visiblePause.setOnFinished(event1 -> delete_label.setVisible(false));
-                    delete_label.setVisible(true);
-                    visiblePause.play();
+                    setCellTable();
+                    setVisibleLabel(3);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
         }else{
-            PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-            visiblePause.setOnFinished(event1 -> notID_label.setVisible(false));
-            notID_label.setVisible(true);
-            visiblePause.play();
+            setVisibleLabel(2);
         }
     }
 
-    public void update(MouseEvent mouseEvent) {
-        if(!id_field.getText().equals(""))
-        {
-            if (verification())
-            {
-                if(id_field.getText().equals("")){
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText(null);
-                    alert.setContentText("You did not enter ID!");
-                    alert.show();
-                }else{
-                    delete_label.setVisible(false);
-                    notFound_label.setVisible(false);
-                    update_label.setVisible(false);
-                    notID_label.setVisible(false);
+    public void updateFlightInfo(MouseEvent mouseEvent) {
+        String regex = "^\\d{0,8}?$";
+        Pattern pattern0 = Pattern.compile(regex);
+        Matcher matcher0 = pattern0.matcher(priceField.getText());
+        regex = "^\\d{0,2}?$";
+        Pattern pattern1 = Pattern.compile(regex);
+        Matcher matcher1 = pattern1.matcher(hourField.getText());
+        Pattern pattern2 = Pattern.compile(regex);
+        Matcher matcher2 = pattern2.matcher(minutesField.getText());
+        Pattern pattern4 = Pattern.compile(regex);
+        Matcher matcher4 = pattern4.matcher(dayField.getText());
+        Pattern pattern5 = Pattern.compile(regex);
+        Matcher matcher5 = pattern5.matcher(monthField.getText());
+        regex = "^\\d{0,8}?$";
+        Pattern pattern3 = Pattern.compile(regex);
+        Matcher matcher3 = pattern3.matcher(seatsField.getText());
+        regex = "^\\d{0,4}?$";
+        Pattern pattern6 = Pattern.compile(regex);
+        Matcher matcher6 = pattern6.matcher(yearField.getText());
+        if(!idField.getText().equals("")) {
+            if(matcher0.matches() && matcher1.matches() && matcher2.matches() && matcher3.matches()
+                    && matcher4.matches() && matcher5.matches() && matcher6.matches()) {
+                if (verificationIfExistRecord()) {
+                    deleteLabel.setVisible(false);
+                    notFoundLabel.setVisible(false);
+                    updateLabel.setVisible(false);
+                    notIdLabel.setVisible(false);
                     String insert = "UPDATE tab2 SET Destination=?, Location=?, Date=?, Price=?, Hour=?, Seats=? WHERE ID=?";
                     try {
                         pst = connection.prepareStatement(insert);
@@ -350,89 +357,108 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
                         e.printStackTrace();
                     }
                     try {
-                        pst.setString(1, location_field.getText());
-                        pst.setString(2, destination_field.getText());
-                        pst.setString(3, year_field.getText()+"-"+ month_field.getText()+"-"+ day_field.getText());
-                        pst.setInt(4, Integer.parseInt(price_field.getText()));
-                        pst.setInt(5, Integer.parseInt(hour_field.getText()));
-                        pst.setInt(6, Integer.parseInt(seats_field.getText()));
-                        pst.setInt(7, Integer.parseInt(id_field.getText()));
-                        if(Integer.parseInt(year_field.getText())<0 || Integer.parseInt(month_field.getText())<0 || Integer.parseInt(month_field.getText())>12 ||  Integer.parseInt(day_field.getText())<0 || Integer.parseInt(day_field.getText())>31) {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setHeaderText(null);
-                            alert.setContentText("IncHourct format of DATE!");
-                            alert.show();
-                        }else {
-                            PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-                            visiblePause.setOnFinished(event1 -> update_label.setVisible(false));
-                            update_label.setVisible(true);
-                            visiblePause.play();
-                            pst.executeUpdate();
-                        }
-                        refresh_automatic();
+                        pst.setString(1, locationField.getText());
+                        pst.setString(2, destinationField.getText());
+                        pst.setString(3, yearField.getText() + "-" + monthField.getText() + "-" + dayField.getText());
+                        pst.setInt(4, Integer.parseInt(priceField.getText()));
+                        pst.setString(5, hourField.getText() + ":" + minutesField.getText());
+                        pst.setInt(6, Integer.parseInt(seatsField.getText()));
+                        pst.setInt(7, Integer.parseInt(idField.getText()));
+                        setVisibleLabel(4);
+                        pst.executeUpdate();
+                        setCellTable();
                     } catch (SQLException e) {
                         e.printStackTrace();
-                    }}
+                    }
+                }
+            }else if(!matcher0.matches()) {
+                alertWindows(3);
+            }else if(!matcher2.matches() || !matcher1.matches()) {
+                alertWindows(4);
+            }else if(!matcher4.matches() || !matcher5.matches() || !matcher6.matches()){
+                alertWindows(2);
+            }else if(!matcher3.matches()){
+                alertWindows(5);
             }
         }else{
-            PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-            visiblePause.setOnFinished(event1 -> notID_label.setVisible(false));
-            notID_label.setVisible(true);
-            visiblePause.play();
+            setVisibleLabel(1);
         }
 
     }
 
-    void refresh_automatic() {
-        table.getItems().clear();
+    public void alertWindows(int index)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("image/alert.png"));
+        if(index == 1) {
+            alert.setContentText("No flights were found!");
+        }else if(index == 2){
+            alert.setContentText("Wrong date format!");
+        }else if(index==3){
+            alert.setContentText("Wrong price format!");
+        }else if(index==4){
+            alert.setContentText("Wrong hour format!");
+        }else if(index==5){
+            alert.setContentText("Wrong format of the number of seats!");
+        }
+        alert.show();
+    }
+
+    public ObservableList<ModelViewFlight> refresh_automatic() {
+        handler = new DBHandler();
+        connection = handler.getConnection();
+        ObservableList<ModelViewFlight> list = FXCollections.observableArrayList();
         try {
-            pst = connection.prepareStatement("SELECT * from tab2");
+            pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
+            pst.setInt(1, 0);
+            pst.setString(2, timeZone());
             ResultSet rs = pst.executeQuery();
             while(rs.next()){
-                oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
+                list.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-        table.setItems(oblist);
+        return list;
     }
 
-    boolean verification()
-    {
-        String insert = "SELECT * FROM tab2 WHERE ID=?";
-        int count = 0;
-        try {
-            pst = connection.prepareStatement(insert);
-            pst.setInt(1, Integer.parseInt(id_field.getText()));
-            ResultSet rst = pst.executeQuery();
-            if(rst.next()){
-                count++;
+    public boolean verificationIfExistRecord() {
+        int nrRecords = 0;
+        for (ModelViewFlight x : oblist) {
+            if (Integer.parseInt(idField.getText())==(x.getID())) {
+                nrRecords++;
             }
-            if(count==0){
-                destination_field.clear();
-                location_field.clear();
-                year_field.clear();
-                month_field.clear();
-                day_field.clear();
-                price_field.clear();
-                hour_field.clear();
-                seats_field.clear();
-                PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-                visiblePause.setOnFinished(event1 -> notFound_label.setVisible(false));
-                notFound_label.setVisible(true);
-                visiblePause.play();
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        if(nrRecords==0){
+            clearAllField();
+            return false;
         }
         return true;
+    }
+
+    public String timeZone() {
+        TimeZone tz = TimeZone.getTimeZone("Europe/Moscow");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        dateFormat.setTimeZone(tz);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String mark = dateFormat.format(calendar.getTime());
+        return mark;
+    }
+
+    @FXML
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void minimize() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.setIconified(true);
     }
 }
