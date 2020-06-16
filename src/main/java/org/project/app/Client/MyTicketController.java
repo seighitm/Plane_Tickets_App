@@ -75,7 +75,7 @@ public class MyTicketController implements Initializable{
                     pst.setInt(1, rs1.getInt("id_air"));
                     ResultSet rs = pst.executeQuery();
                     while (rs.next()) {
-                        oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Destination"), rs.getString("Location"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
+                        oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Destination"), rs.getString("Location"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
                     }
                 }
             }

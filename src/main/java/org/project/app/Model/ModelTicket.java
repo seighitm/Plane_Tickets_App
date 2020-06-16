@@ -2,15 +2,15 @@ package org.project.app.Model;
 
 public class ModelTicket {
     int id;
-    String date;
+    int ore;
     String id_user;
     String id_fl;
 
-    public ModelTicket(int id, String id_user, String id_fl, String date) {
+    public ModelTicket(int id, String id_user, String id_fl, int ore) {
         this.id = id;
         this.id_user = id_user;
         this.id_fl = id_fl;
-        this.date = date;
+        this.ore = ore;
     }
 
     public int getId() {
@@ -37,11 +37,11 @@ public class ModelTicket {
         this.id_fl = id_fl;
     }
 
-    public String getDate() {
-        return date;
+    public int getOre() {
+        return ore;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setOre(int ore) {
+        this.ore = ore;
     }
 }
