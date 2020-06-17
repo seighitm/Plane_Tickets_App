@@ -58,7 +58,7 @@ public class HomeWorkerController implements  Initializable{
         if (allert_window(1)){
             setPage(home_page, "/LogIn_SignUp/LogIn.fxml");
         }
-        loginController.setAutomation_login(2);
+        loginController.setAutomationLogin(2);
     }
 
     public void setPage(AnchorPane page, String patch) throws IOException {

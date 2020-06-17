@@ -5,13 +5,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+import org.project.app.Connection.DBHandler;
+
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.math.BigInteger;
@@ -25,166 +26,160 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
-import org.project.app.Connection.DBHandler;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Window;
 import java.io.File;
 import java.io.IOException;
 
-public class LoginController extends Window implements Initializable {
+public class LoginController implements Initializable {
 
-    private String md5_code0 = "123";
-    private String md5_code1 = "456";
+    @FXML
+    private AnchorPane anchorPane;
+    @FXML
+    private CheckBox checkRememberPassword;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private ImageView minimizeCloseIcon;
 
-    private static String temp_username;
-    private static String temp_userEmail;
+    private final static String md5Code0 = "123";
+    private final static String md5Code1 = "456";
+    private static String tempUsername;
+    private static String tempUserEmail;
+    public static int nonLoggedUser;
+    private static int automaticLoginAlertMessage;
+    private static int automaticLogin;
+    private static int tempAccountType;
+    private String patchFromHomeScreen;
+    private int tempNrAccount;
 
-    private String patch;
+    public String getMD50()
+    {
+        return md5Code0;
+    }
 
-    private static int pers;
+    public String getMD51()
+    {
+        return md5Code1;
+    }
 
     public String getTempUserName() {
-        return temp_username;
+        return tempUsername;
     }
 
     public String getTempUserEmail() {
-        return temp_userEmail;
+        return tempUserEmail;
     }
 
-    public void setTempUserName(String temp_username) {
-        this.temp_username=temp_username;
+    public void setAutomationLogin(int automationLogin) {
+        this.automaticLogin = automationLogin;
     }
 
-    public void setTempUserEmail(String temp_userEmail) {
-        this.temp_userEmail=temp_userEmail;
+    public void setTempUserName(String tempUsername) {
+        this.tempUsername =tempUsername;
+    }
+
+    public void setTempUserEmail(String tempUserEmail) {
+        this.tempUserEmail=tempUserEmail;
     }
 
     public int getPers() {
-        return pers;
+        return tempAccountType;
     }
 
-    @FXML
-    private AnchorPane login_page;
+    public int getNonLoggedUser() {
+        return nonLoggedUser;
+    }
 
-    @FXML
-    private CheckBox check_remember;
-
-    @FXML
-    private TextField username_field;
-    @FXML
-    private PasswordField password_field;
-
-    @FXML
-    private RadioButton worker_button;
-    @FXML
-    private RadioButton customer_button;
-
-    @FXML
     private DBHandler handler;
-    @FXML
     private Connection connection;
-    @FXML
     private PreparedStatement pst;
-
-    @FXML
-    private ImageView min_close;
 
     File file = new File(System.getProperty("user.home") + File.separatorChar + "myConfig");
 
-    public static int aux = 0;
-    public static int automation_login=0;
-
-    public void setAutomation_login(int automation_login) {
-        this.automation_login = automation_login;
-    }
-
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        readFile();
+        nonLoggedUser=0;
+        checkRememberPassword.setSelected(true);
+        if(!usernameField.getText().isEmpty() && !passwordField.getText().isEmpty() &&  automaticLogin == 0) {
+            automaticLoginAlertMessage = 1;
+            logging();
+            automaticLogin++;
+        }
+    }
+
+    //creating connections with the database
+    public boolean createConnection() {
         handler = new DBHandler();
         connection = handler.getConnection();
-        readFile();
-        check_remember.setSelected(true);
-        if(!username_field.getText().isEmpty() && !password_field.getText().isEmpty() && getAccount()!=0 && automation_login==0) {
-            aux=1;
-            login();
-            automation_login++;
-        }
+        if(connection!=null)
+            return true;
+        else
+            return false;
     }
 
     @FXML
-    void signIn(MouseEvent mouseEvent){
-        aux=0;
-        login();
+    void loginButton(){
+        automaticLoginAlertMessage =0;
+        logging();
     }
 
-    public void login()
-    {
-        setAutomation_login(1);
-        if(!username_field.getText().isEmpty() && !password_field.getText().isEmpty() && getAccount()!=0) {
-            String q1 = "SELECT * from tab1 where email=? and pass=? and (pers=? or pers=?)";
-            try {
-                pst = connection.prepareStatement(q1);
-                pst.setString(1, username_field.getText());
-                setTempUserEmail(username_field.getText());
-                pst.setString(2, getMd5(getMd5(getMd5(md5_code0 + password_field.getText()) + getMd5(password_field.getText() + md5_code1))));
-                pst.setInt(3, getAccount());
-                pst.setInt(4, getAccount()-2*getAccount());
-                int count = 0, temp= 0;
-                try(ResultSet rs = pst.executeQuery()){
-                    while (rs.next()) {
-                        setTempUserName(rs.getString("name"));
-                        temp=rs.getInt("pers");
-                        count++;
-                    }
+    public void logging() {
+        setAutomationLogin(1);
+        if(!usernameField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
+            verificationCredentials(usernameField.getText(), passwordField.getText());
+            if (tempNrAccount == 1) {
+                if(tempAccountType >0 && tempAccountType <4) {
+                    writeFile();
+                    setPage(anchorPane, patchFromHomeScreen);
+                }else if(automaticLoginAlertMessage !=1){
+                    alertWindows(1);
                 }
-                if (count == 1) {
-                    if(temp>0 && temp<4)
-                    {
-                        writeFile();
-                        try {
-                            setPage(login_page, patch);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }else if(aux!=1){
-                        allertWindow(1);
-                    }
-                } else if(aux!=1){
-                    allertWindow(2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else if(automaticLoginAlertMessage !=1){
+                alertWindows(2);
             }
-        }else if(aux!=1){
-            allertWindow(3);
+        }else if(automaticLoginAlertMessage !=1){
+            alertWindows(3);
         }
     }
 
-    @FXML
-    void clearTextField(MouseEvent event) {
-        username_field.clear();
-        password_field.clear();
-        worker_button.setSelected(false);
-        customer_button.setSelected(false);
-    }
-
-    public int getAccount()
-    {
-        if(worker_button.isSelected()) {
-            pers = 1;
-            patch = "/Worker/HomeWorker.fxml";
-        } else if (customer_button.isSelected()) {
-            pers = 2;
-            patch = "/Client/HomeCustomer.fxml";
-        } else if (!customer_button.isSelected() && !worker_button.isSelected()) {
-            pers = 3;
-            patch = "/Admin/HomeAdmin.fxml";
+    public String verificationCredentials(String email, String password) {
+        createConnection();
+        try {
+            String q1 = "SELECT * from tab1 where email=? and pass=?";
+            pst = connection.prepareStatement(q1);
+            pst.setString(1, email);
+            setTempUserEmail(email);
+            pst.setString(2, getMd5(getMd5(getMd5(getMD50() + password) + getMd5(password + getMD51()))));
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    setTempUserName(rs.getString("name"));
+                    tempAccountType = rs.getInt("pers");
+                    getPatchFromHomeScreen(tempAccountType);
+                    tempNrAccount++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return pers;
+        if(tempNrAccount >0)
+            return email+"_"+password+"_" +tempAccountType;
+        else
+            return null;
     }
 
-    public String getMd5(String input)
-    {
+    public void getPatchFromHomeScreen(int type) {
+        if(type==1) {
+            patchFromHomeScreen = "/Worker/HomeWorker.fxml";
+        } else if (type==2) {
+            patchFromHomeScreen = "/Client/HomeCustomer.fxml";
+        } else if (type==3) {
+            patchFromHomeScreen = "/Admin/HomeAdmin.fxml";
+        }
+    }
+
+    public String getMd5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
@@ -201,50 +196,52 @@ public class LoginController extends Window implements Initializable {
     }
 
     @FXML
-    void signUp(MouseEvent mouseEvent) throws IOException {
-        setPage(login_page, "/LogIn_SignUp/SignUp.fxml");
+    void signUp() {
+        setPage(anchorPane, "/LogIn_SignUp/SignUp.fxml");
     }
 
     @FXML
-    void skip(MouseEvent event) throws IOException  {
-        setPage(login_page, "/NonLoggedUser/HomeNonLoggedUser.fxml");
+    void skip() {
+        setPage(anchorPane, "/NonLoggedUser/HomeNonLoggedUser.fxml");
+        nonLoggedUser = 1;
     }
 
-    public void setPage(AnchorPane page, String patch) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource(patch));
+    public void setPage(AnchorPane page, String patch) {
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource(patch));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         page.getChildren().setAll(pane);
     }
 
     @FXML
-    void close(MouseEvent event) {
-        Stage stage = (Stage) min_close.getScene().getWindow();
-        writeFile();
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     void minimize() {
-        Stage stage = (Stage) min_close.getScene().getWindow();
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
         stage.setIconified(true);
     }
 
     public void writeFile() {
-        if(check_remember.isSelected())
-        {
+        if(checkRememberPassword.isSelected()) {
             try {
                 if(!file.exists()) file.createNewFile();
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
-                bw.write(username_field.getText());
+                bw.write(usernameField.getText());
                 bw.newLine();
-                bw.write(password_field.getText());
-                bw.newLine();
-                bw.write(String.valueOf(getAccount()));
+                bw.write(passwordField.getText());
                 bw.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            BufferedWriter bw = null;
+            BufferedWriter bw;
             try {
                 bw = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
                 bw.newLine();
@@ -261,14 +258,8 @@ public class LoginController extends Window implements Initializable {
         try {
             if (file.exists() && file.length() != 0) {
                 Scanner scan = new Scanner(file);
-                username_field.setText(scan.nextLine());
-                password_field.setText(scan.nextLine());
-                String u = scan.nextLine();
-                if (u.equals("1")) {
-                    worker_button.setSelected(true);
-                } else if (u.equals("2")) {
-                    customer_button.setSelected(true);
-                }
+                usernameField.setText(scan.nextLine());
+                passwordField.setText(scan.nextLine());
                 scan.close();
                 return true;
             }
@@ -278,13 +269,11 @@ public class LoginController extends Window implements Initializable {
         return false;
     }
 
-    public void allertWindow(int index)
-    {
+    public void alertWindows(int index) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image("image/alert.png"));
-
         if(index==1) {
             alert.setContentText("Account is not validated.\nPlease try again later.");
         } else if(index==2) {

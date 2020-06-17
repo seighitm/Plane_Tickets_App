@@ -5,11 +5,11 @@ public class ModelViewFlight {
     String Destination;
     String Date;
     int ID;
-    int Hour;
+    String Hour;
     int Price;
     int Seats;
 
-    public ModelViewFlight(int id, String locatia, String destinatia, String data, int pret, int ore, int nr) {
+    public ModelViewFlight(int id, String locatia, String destinatia, String data, int pret, String ore, int nr) {
         this.Location = locatia;
         this.Destination = destinatia;
         this.Date = data;
@@ -59,11 +59,11 @@ public class ModelViewFlight {
         this.ID = ID;
     }
 
-    public int getHour() {
+    public String getHour() {
         return Hour;
     }
 
-    public void setHour(int hour) {
+    public void setHour(String hour) {
         this.Hour = hour;
     }
 

@@ -1,93 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
-<AnchorPane fx:id="view_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.ViewUpdateDeleteFlightsController">
+<AnchorPane fx:id="anchorPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.ViewUpdateDeleteFlightsController">
     <children>
-        <Label fx:id="delete_label" layoutX="60.0" layoutY="520.0" text="Delete Succesfull">
+        <ImageView fitHeight="600.0" fitWidth="800.0">
+            <image>
+                <Image url="@../image/blue.png" />
+            </image>
+        </ImageView>
+        <Label fx:id="deleteLabel" layoutX="60.0" layoutY="520.0" text="Delete Succesfull" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>
         </Label>
-        <Label fx:id="notFound_label" layoutX="82.0" layoutY="520.0" text="Not found">
+        <Label fx:id="notFoundLabel" layoutX="82.0" layoutY="520.0" text="Not found" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>
         </Label>
-        <Label fx:id="update_label" layoutX="57.0" layoutY="520.0" text="Update Succesfull">
+        <Label fx:id="updateLabel" layoutX="57.0" layoutY="520.0" text="Update Succesfull" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>
         </Label>
-        <Label fx:id="notID_label" layoutX="36.0" layoutY="520.0" text="You did not enter an ID!">
+        <Label fx:id="notIdLabel" layoutX="36.0" layoutY="520.0" text="You did not enter an ID!" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>
         </Label>
-      <Pane layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
-         <children>
-              <TableView fx:id="table" prefHeight="550.0" prefWidth="570.0">
-                  <columns>
-                      <TableColumn fx:id="id_table" prefWidth="26.0" text="ID" />
-                      <TableColumn fx:id="location_table" minWidth="0.0" prefWidth="100.0" text="Location" />
-                      <TableColumn fx:id="destination_table" prefWidth="123.0" text="Destination" />
-                      <TableColumn fx:id="date_table" prefWidth="70.0" text="Date" />
-                      <TableColumn fx:id="price_table" prefWidth="65.0" text="Price" />
-                      <TableColumn fx:id="hour_table" minWidth="3.0" prefWidth="62.0" text="Hour" />
-                      <TableColumn fx:id="seats_table" prefWidth="59.0" text="Seats" />
-                      <TableColumn fx:id="action_table" minWidth="0.0" prefWidth="64.0" />
-                  </columns>
-              </TableView>
-            <TextField fx:id="destinationSearch_field"  layoutX="278.0" layoutY="558.0" prefHeight="25.0" prefWidth="135.0" promptText="Destination" />
-            <TextField fx:id="locationSearch_field"  layoutX="145.0" layoutY="558.0" prefHeight="25.0" prefWidth="125.0" promptText="Destination" text="Location" />
-            <Button fx:id="id_ref" layoutY="558.0" onMouseClicked="#refresh_button" prefHeight="30.0" prefWidth="69.0" style="-fx-background-color: #7eb5ec;" text="Refresh">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Button>
-            <Button fx:id="id_update2" layoutX="77.0" layoutY="558.0" onMouseClicked="#search_flights" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #7eb5ec;" text="Search">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Button>
-            <TextField fx:id="dateSearch_field"  layoutX="421.0" layoutY="558.0" prefHeight="25.0" prefWidth="135.0" promptText="Destination" text="Date" />
-         </children>
-      </Pane>
-      <TextField fx:id="destination_field" layoutX="33.0" layoutY="175.0" prefHeight="25.0" prefWidth="166.0" promptText="Destination" />
-      <TextField fx:id="location_field"  layoutX="33.0" layoutY="220.0" prefHeight="25.0" prefWidth="166.0" promptText="Location" />
-      <TextField fx:id="price_field" layoutX="33.0" layoutY="265.0" prefHeight="25.0" prefWidth="166.0" promptText="Price" />
-      <TextField fx:id="year_field"  layoutX="139.0" layoutY="310.0" prefHeight="25.0" prefWidth="60.0" promptText="Year" />
-      <TextField fx:id="month_field"  layoutX="84.0" layoutY="310.0" prefHeight="25.0" prefWidth="49.0" promptText="Month" />
-      <TextField fx:id="day_field" layoutX="35.0" layoutY="310.0" prefHeight="25.0" prefWidth="43.0" promptText="Day" />
-      <TextField fx:id="hour_field"  layoutX="33.0" layoutY="350.0" prefHeight="25.0" prefWidth="166.0" promptText="Hour" />
-      <TextField fx:id="seats_field" layoutX="33.0" layoutY="395.0" prefHeight="25.0" prefWidth="166.0" promptText="Seats" />
-      <Button fx:id="search_button" layoutX="33.0" layoutY="130.0" onMouseClicked="#search_byID" style="-fx-background-color: #7eb5ec;" text="Search by ID">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
-      <TextField fx:id="id_field"  layoutX="138.0" layoutY="129.0" prefHeight="25.0" prefWidth="60.0" promptText="ID" />
-      <Button fx:id="id_back" layoutX="33.0" layoutY="28.0" onMouseClicked="#back" style="-fx-background-color: #7eb5ec;" text="BACK">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button fx:id="delete_button" layoutX="119.0" layoutY="440.0" onMouseClicked="#delete" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #7eb5ec;" text="Delete">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
-      <Button fx:id="id_update" layoutX="34.0" layoutY="440.0" onMouseClicked="#update" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #7eb5ec;" text="Update">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
+        <Pane layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
+            <children>
+                <TableView fx:id="table" layoutY="25.0" prefHeight="525.0" prefWidth="570.0">
+                    <columns>
+                        <TableColumn fx:id="idTable" prefWidth="26.0" text="ID" />
+                        <TableColumn fx:id="locationTable" minWidth="0.0" prefWidth="134.0" text="Location" />
+                        <TableColumn fx:id="destinationTable" prefWidth="115.0" text="Destination" />
+                        <TableColumn fx:id="dateTable" prefWidth="111.0" text="Date" />
+                        <TableColumn fx:id="priceTable" prefWidth="77.0" text="Price" />
+                        <TableColumn fx:id="hourTable" minWidth="3.0" prefWidth="43.0" text="Hour" />
+                        <TableColumn fx:id="seatsTable" prefWidth="63.0" text="Seats" />
+                    </columns>
+                </TableView>
+                <TextField fx:id="locationSearchField" layoutX="147.0" layoutY="569.0" prefHeight="25.0" prefWidth="125.0" />
+                <TextField fx:id="destinationSearchField" layoutX="285.0" layoutY="569.0" prefHeight="25.0" prefWidth="135.0" />
+                <TextField fx:id="dateSearchField" layoutX="428.0" layoutY="569.0" prefHeight="25.0" prefWidth="135.0" />
+                <Button fx:id="id_update2" layoutX="76.0" layoutY="569.0" onMouseClicked="#searchFlightsSystem" prefHeight="16.0" prefWidth="60.0" text="Search" />
+                <Button fx:id="id_ref" layoutY="569.0" onMouseClicked="#refresh_button" prefHeight="25.0" prefWidth="69.0" text="Refresh" />
+                <Label layoutX="148.0" layoutY="552.0" text="Location" textFill="WHITE">
+                    <font>
+                        <Font size="11.0" />
+                    </font>
+                </Label>
+                <Label layoutX="285.0" layoutY="552.0" text="Destination" textFill="WHITE">
+                    <font>
+                        <Font size="11.0" />
+                    </font>
+                </Label>
+                <Label layoutX="428.0" layoutY="552.0" text="Date" textFill="WHITE">
+                    <font>
+                        <Font size="11.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <TextField fx:id="idField" layoutX="139.0" layoutY="128.0" prefHeight="25.0" prefWidth="60.0" />
+        <TextField fx:id="destinationField" layoutX="33.0" layoutY="175.0" prefHeight="25.0" prefWidth="166.0" />
+        <TextField fx:id="locationField" layoutX="33.0" layoutY="220.0" prefHeight="25.0" prefWidth="166.0" />
+        <TextField fx:id="priceField" layoutX="33.0" layoutY="265.0" prefHeight="25.0" prefWidth="166.0" />
+        <TextField fx:id="dayField" layoutX="34.0" layoutY="310.0" prefHeight="25.0" prefWidth="42.0" />
+        <TextField fx:id="monthField" layoutX="84.0" layoutY="310.0" prefHeight="25.0" prefWidth="49.0" />
+        <TextField fx:id="yearField" layoutX="139.0" layoutY="310.0" prefHeight="25.0" prefWidth="60.0" />
+        <TextField fx:id="hourField" layoutX="33.0" layoutY="352.0" prefHeight="25.0" prefWidth="80.0" />
+        <TextField fx:id="minutesField" layoutX="119.0" layoutY="352.0" prefHeight="25.0" prefWidth="80.0" />
+        <TextField fx:id="seatsField" layoutX="33.0" layoutY="395.0" prefHeight="25.0" prefWidth="166.0" />
+        <Button fx:id="id_update" layoutX="34.0" layoutY="440.0" onMouseClicked="#updateFlightInfo" prefHeight="25.0" prefWidth="80.0" text="Update" />
+        <Button fx:id="deleteButton" layoutX="119.0" layoutY="440.0" onMouseClicked="#deleteFlight" prefHeight="25.0" prefWidth="80.0" text="Delete" />
+        <Button fx:id="searchButton" layoutX="31.0" layoutY="128.0" onMouseClicked="#searchByID" prefHeight="25.0" prefWidth="90.0" text="Search by ID" />
+        <Label layoutX="33.0" layoutY="159.0" text="Destination" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="33.0" layoutY="203.0" text="Location" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="33.0" layoutY="248.0" text="Price" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="35.0" layoutY="293.0" text="Day" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="86.0" layoutY="292.0" text="Month" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="141.0" layoutY="292.0" text="Year" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="34.0" layoutY="336.0" text="Hour" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="34.0" layoutY="378.0" text="Seats" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="140.0" layoutY="110.0" text="ID" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="121.0" layoutY="336.0" text="Minutes" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Pane prefHeight="26.0" prefWidth="800.0" style="-fx-background-color: #2D3447;">
+            <children>
+                <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="750.0" layoutY="3.0" onMouseClicked="#minimize">
+                    <image>
+                        <Image url="@../image/circl.png" />
+                    </image>
+                </ImageView>
+                <ImageView fx:id="minimizeCloseIcon1" fitHeight="20.0" fitWidth="20.0" layoutX="777.0" layoutY="3.0" onMouseClicked="#close">
+                    <image>
+                        <Image url="@../image/interfac.png" />
+                    </image>
+                </ImageView>
+                <ImageView fx:id="id_back" fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="3.0" onMouseClicked="#backButton">
+                    <image>
+                        <Image url="@../image/return.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

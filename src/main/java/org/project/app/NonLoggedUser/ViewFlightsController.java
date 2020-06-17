@@ -1,7 +1,5 @@
 package org.project.app.NonLoggedUser;
 
-import org.project.app.Connection.DBHandler;
-import org.project.app.Model.ModelViewFlight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,145 +11,148 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.project.app.Connection.DBHandler;
+import org.project.app.Model.ModelViewFlight;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class ViewFlightsController implements Initializable {
 
     @FXML
-    private AnchorPane view_page;
-
+    private AnchorPane anchorPane;
     @FXML
     private TableView<ModelViewFlight> table;
     @FXML
-    private TableColumn<ModelViewFlight, Integer> id_table;
+    private TableColumn<ModelViewFlight, Integer> idTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> location_table;
+    private TableColumn<ModelViewFlight, String> locationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> destination_table;
+    private TableColumn<ModelViewFlight, String> destinationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> date_table;
+    private TableColumn<ModelViewFlight, String> dateTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> price_table;
+    private TableColumn<ModelViewFlight, String> priceTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> hour_table;
+    private TableColumn<ModelViewFlight, String> hourTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> seats_table;
+    private TableColumn<ModelViewFlight, String> seatsTable;
+    @FXML
+    private TextField dateField;
+    @FXML
+    private TextField destinationField;
+    @FXML
+    private TextField locationField;
 
     private DBHandler handler;
     private PreparedStatement pst;
     private Connection connection;
-
-    @FXML
-    private TextField date_field;
-    @FXML
-    private TextField destination_field;
-    @FXML
-    private TextField location_field;
-
     ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
         connection = handler.getConnection();
-        refresh_automation();
+        viewFlights();
     }
 
     @FXML
-    void back(MouseEvent event) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/NonLoggedUser/HomeNonLoggedUser.fxml"));
-        view_page.getChildren().setAll(pane);
+    void back() {
         try {
+            AnchorPane pane = FXMLLoader.load(getClass().getResource("/NonLoggedUser/HomeNonLoggedUser.fxml"));
+            anchorPane.getChildren().setAll(pane);
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    void search_flight(MouseEvent event) {
-        try {
-            table.getItems().clear();
-            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=?");
-            pst.setString(1, destination_field.getText());
-            pst.setString(2, location_field.getText());
-            pst.setString(3, date_field.getText());
-            int count = 0;
-            try(ResultSet rs = pst.executeQuery()){
-                while(rs.next()){
-                    if(rs.getInt("Seats")>0) {
-                        oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
-                        count++;
-                    }
-                }
+    void searchFlight() {
+        ObservableList<ModelViewFlight> tempFlights = FXCollections.observableArrayList();
+        if(!destinationField.getText().isEmpty() && !locationField.getText().isEmpty() && !dateField.getText().isEmpty()) {
+            for (ModelViewFlight x : oblist) {
+                if (x.getDestination().equals(destinationField.getText()) || x.getLocation().equals(locationField.getText()) || x.getDate().equals(dateField.getText()))
+                    tempFlights.add(x);
             }
-            if(count == 0) {
-                refresh_automation();
-                allertWindow(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            idTable.setCellValueFactory(new PropertyValueFactory("ID"));
+            locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
+            destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
+            dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
+            priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
+            hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
+            seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
+            table.setItems(tempFlights);
+        }else{
+            alertWindows(1);
         }
-
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-
-        table.setItems(oblist);
     }
 
-    public void refresh_automation() {
+    public ObservableList<ModelViewFlight> viewFlights() {
+        handler = new DBHandler();
+        connection = handler.getConnection();
         table.getItems().clear();
         try {
-            pst = connection.prepareStatement("SELECT * from tab2");
+            pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
+            pst.setInt(1, 30);
+            pst.setString(2, timeZone());
             try(ResultSet rs = pst.executeQuery()){
                 while(rs.next()) {
-                    if (rs.getInt("Seats") > 0) {
-                        oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getInt("Hour"), rs.getInt("Seats")));
-                    }
+                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        id_table.setCellValueFactory(new PropertyValueFactory("ID"));
-        location_table.setCellValueFactory(new PropertyValueFactory("Location"));
-        destination_table.setCellValueFactory(new PropertyValueFactory("Destination"));
-        date_table.setCellValueFactory(new PropertyValueFactory("Date"));
-        price_table.setCellValueFactory(new PropertyValueFactory("Price"));
-        hour_table.setCellValueFactory(new PropertyValueFactory("Hour"));
-        seats_table.setCellValueFactory(new PropertyValueFactory("Seats"));
-
+        idTable.setCellValueFactory(new PropertyValueFactory("ID"));
+        locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
+        destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
+        dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
+        priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
+        hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
+        seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
         table.setItems(oblist);
+        return oblist;
     }
 
-    public void refresh_button() {
-        refresh_automation();
+    @FXML
+    public void refreshButton() {
+        viewFlights();
     }
 
-    public void allertWindow(int index)
+    public void alertWindows(int index)
     {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image("image/alert.png"));
         if(index==1) {
-            alert.setContentText("No flights were found!");
+            alert.setContentText("Account is not validated.\nPlease try again later.");
         }
         alert.show();
+    }
+
+    public String timeZone() {
+        TimeZone tz = TimeZone.getTimeZone("Europe/Moscow");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        dateFormat.setTimeZone(tz);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String mark = dateFormat.format(calendar.getTime());
+        return mark;
     }
 }

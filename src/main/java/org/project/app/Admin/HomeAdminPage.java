@@ -84,7 +84,7 @@ public class HomeAdminPage implements Initializable {
             openNewPage(root, id_login);
 
         }
-        loginController.setAutomation_login(2);
+        loginController.setAutomationLogin(2);
     }
 
     void refresh()

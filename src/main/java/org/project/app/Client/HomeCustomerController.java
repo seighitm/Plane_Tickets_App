@@ -46,7 +46,7 @@ public class HomeCustomerController {
         if (allert_window(1)){
             setPage(home_page, "/LogIn_SignUp/LogIn.fxml");
         }
-        loginController.setAutomation_login(2);
+        loginController.setAutomationLogin(2);
     }
 
     public boolean allert_window(int index)
