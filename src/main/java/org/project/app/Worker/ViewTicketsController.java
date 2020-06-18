@@ -1,74 +1,84 @@
 package org.project.app.Worker;
 
-import org.project.app.Connection.DBHandler;
-import org.project.app.Model.ModelTicket;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
-
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import org.project.app.Connection.DBHandler;
+import org.project.app.Model.ModelTicket;
 
 public class ViewTicketsController implements  Initializable{
 
     @FXML
-    private TableView<ModelTicket> table_view;
-
+    private TableView<ModelTicket> table;
     @FXML
-    private TableColumn<ModelTicket, Integer> table_id;
-
+    private TableColumn<ModelTicket, Integer> idTable;
     @FXML
-    private TableColumn<ModelTicket, String> table_name;
-
+    private TableColumn<ModelTicket, String> nameTable;
     @FXML
-    private TableColumn<ModelTicket, String> table_flight;
-
+    private TableColumn<ModelTicket, String> flightTable;
     @FXML
-    private TableColumn<ModelTicket, Integer> table_hour;
-
+    private TableColumn<ModelTicket, String> dateTable;
     @FXML
-    private TableColumn<ModelTicket, String> table_action;
-
+    private TableColumn<ModelTicket, String> actionTable;
     @FXML
+    private ImageView minimizeCloseIcon;
+
     private DBHandler handler;
-
-    @FXML
     private PreparedStatement pst;
-
-    @FXML
     private Connection connection;
 
-    private int temp_IDname;
-    private int temp_IDflight;
-    private int temp_id;
-    private int temp_hour;
-    private String temp_userName;
+    private int tempIdName;
+    private int tempIdFlights;
+    private int tempId;
+    private String tempUserName;
+    private String tempFlightName;
+    private String tempDate;
 
-    public String getTemp_userName() {
-        return temp_userName;
+
+    public String getTempDate() {
+        return tempDate;
     }
 
-    public void setTemp_userName(String temp_userName) {
-        this.temp_userName = temp_userName;
+    public void setTempDate(String tempDate) {
+        this.tempDate = tempDate;
     }
 
-    public String getTemp_flightName() {
-        return temp_flightName;
+    public String getTempUserName() {
+        return tempUserName;
     }
 
-    public void setTemp_flightName(String temp_flightName) {
-        this.temp_flightName = temp_flightName;
+    public void setTempUserName(String tempUserName) {
+        this.tempUserName = tempUserName;
     }
 
-    private String temp_flightName;
+    public String getTempFlightName() {
+        return tempFlightName;
+    }
+
+    public void setTempFlightName(String tempFlightName) {
+        this.tempFlightName = tempFlightName;
+    }
 
     ObservableList<ModelTicket> oblist = FXCollections.observableArrayList();
 
@@ -76,41 +86,46 @@ public class ViewTicketsController implements  Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
         connection = handler.getConnection();
-        View_tickets();
+        viewTickets();
     }
 
-    void View_tickets() {
-        table_view.setPlaceholder(new Label("No tickets were purchased"));
+    void viewTickets() {
+        table.setPlaceholder(new Label("No tickets were purchased"));
         try {
-            pst = connection.prepareStatement("SELECT * from tab3");
+            String select = "SELECT * FROM tab3";
+            pst = connection.prepareStatement(select);
             try(ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    temp_id = rs.getInt("id");
-                    temp_IDname = rs.getInt("id_user");
-                    temp_IDflight = rs.getInt("id_air");
-
-                    pst = connection.prepareStatement("SELECT * from tab2 where ID=?");
-                    pst.setInt(1, temp_IDflight);
-                    try (ResultSet rs1 = pst.executeQuery()) {
+                    tempId = rs.getInt("id");
+                    tempIdName = rs.getInt("id_user");
+                    tempIdFlights = rs.getInt("id_air");
+                    select = "SELECT * FROM tab2 WHERE ID=? AND Date>?";
+                    pst = connection.prepareStatement(select);
+                    setTempFlightName("");
+                    pst.setInt(1, tempIdFlights);
+                    pst.setString(2, timeZone());
+                    try(ResultSet rs1 = pst.executeQuery()) {
                         while (rs1.next()) {
-                            temp_flightName = rs1.getString("Destination") + "-" + rs1.getString("Location");
-                            temp_hour = rs1.getInt("Hour");
+                            setTempFlightName(rs1.getString("Destination") + "-" + rs1.getString("Location"));
+                            setTempDate(rs1.getString("Date"));
                         }
                     }
-
-                    pst = connection.prepareStatement("SELECT * from tab1 where idtab1=?");
-                    pst.setInt(1, temp_IDname);
-                    try(ResultSet rs0 = pst.executeQuery()) {
-                        while (rs0.next()) {
-                            setTemp_userName(rs0.getString("name"));
+                    if(!getTempFlightName().equals("")) {
+                        select = "SELECT * FROM tab1 WHERE idtab1=?";
+                        pst = connection.prepareStatement(select);
+                        pst.setInt(1, tempIdName);
+                        try (ResultSet rs0 = pst.executeQuery()) {
+                            while (rs0.next()) {
+                                setTempUserName(rs0.getString("name"));
+                            }
                         }
-                    }
-                    oblist.add(new ModelTicket(temp_id, temp_userName, temp_flightName, temp_hour));
 
-                    table_id.setCellValueFactory(new PropertyValueFactory("id"));
-                    table_name.setCellValueFactory(new PropertyValueFactory("id_user"));
-                    table_flight.setCellValueFactory(new PropertyValueFactory("id_fl"));
-                    table_hour.setCellValueFactory(new PropertyValueFactory("Hour"));
+                        oblist.add(new ModelTicket(tempId, getTempUserName(), getTempFlightName(), getTempDate()));
+                        idTable.setCellValueFactory(new PropertyValueFactory("id"));
+                        nameTable.setCellValueFactory(new PropertyValueFactory("id_user"));
+                        flightTable.setCellValueFactory(new PropertyValueFactory("id_fl"));
+                        dateTable.setCellValueFactory(new PropertyValueFactory("date"));
+                    }
                     Callback<TableColumn<ModelTicket, String>, TableCell<ModelTicket, String>> cellFactory
                             = //
                             new Callback<TableColumn<ModelTicket, String>, TableCell<ModelTicket, String>>() {
@@ -129,9 +144,9 @@ public class ViewTicketsController implements  Initializable{
                                                 btn.setOnAction(event -> {
                                                     ModelTicket curse = getTableView().getItems().get(getIndex());
                                                     int temp_nr = 0;
-                                                    String insert = "SELECT * from tab3 where ID=?";
+                                                    String select = "SELECT * from tab3 where ID=?";
                                                     try {
-                                                        pst = connection.prepareStatement(insert);
+                                                        pst = connection.prepareStatement(select);
                                                         pst.setInt(1, curse.getId());
                                                         try(ResultSet rs2 = pst.executeQuery()) {
                                                             while (rs2.next()) {
@@ -142,19 +157,20 @@ public class ViewTicketsController implements  Initializable{
                                                         e.printStackTrace();
                                                     }
 
-                                                    insert = "DELETE FROM tab3 WHERE ID=?";
+                                                    String delete = "DELETE FROM tab3 WHERE ID=?";
                                                     try {
-                                                        pst = connection.prepareStatement(insert);
+                                                        pst = connection.prepareStatement(delete);
                                                         pst.setInt(1, curse.getId());
                                                         pst.execute();
-                                                        refresh();
+                                                        table.getItems().clear();
+                                                        viewTickets();
                                                     } catch (SQLException e) {
                                                         e.printStackTrace();
                                                     }
 
-                                                    insert = "UPDATE tab2 SET Seats=Seats+1 where ID=?";
+                                                    String update = "UPDATE tab2 SET Seats=Seats+1 where ID=?";
                                                     try {
-                                                        pst = connection.prepareStatement(insert);
+                                                        pst = connection.prepareStatement(update);
                                                         pst.setInt(1, temp_nr);
                                                         pst.executeUpdate();
                                                     } catch (SQLException e) {
@@ -170,9 +186,8 @@ public class ViewTicketsController implements  Initializable{
                                     return cell;
                                 }
                             };
-                    table_action.setCellFactory(cellFactory);
-
-                    table_view.setItems(oblist);
+                    actionTable.setCellFactory(cellFactory);
+                    table.setItems(oblist);
 
                 }
             }
@@ -181,43 +196,73 @@ public class ViewTicketsController implements  Initializable{
         }
     }
 
-    void refresh()
+    void refreshViewTickets()
     {
-        table_view.getItems().clear();
+        table.getItems().clear();
         try {
-            pst = connection.prepareStatement("SELECT * from tab3");
+            pst = connection.prepareStatement("SELECT * from tab3 where ");
             try(ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    temp_id = rs.getInt("id");
-                    temp_IDname = rs.getInt("id_user");
-                    temp_IDflight = rs.getInt("id_air");
+                    tempId = rs.getInt("id");
+                    tempIdName = rs.getInt("id_user");
+                    tempIdFlights = rs.getInt("id_air");
 
-                    pst = connection.prepareStatement("SELECT * from tab2 where ID=?");
-                    pst.setInt(1, temp_IDflight);
+                    pst = connection.prepareStatement("SELECT * from tab2 where ID=? and Date>?");
+                    setTempFlightName(" ");
+                    pst.setInt(1, tempIdFlights);
+                    pst.setString(2, timeZone());
                     try(ResultSet rs1 = pst.executeQuery()) {
                         while (rs1.next()) {
-                            temp_flightName = rs1.getString("Destination") + "-" + rs1.getString("Location");
-                            temp_hour = rs1.getInt("Hour");
+                            setTempFlightName(rs1.getString("Destination") + "-" + rs1.getString("Location"));
+                            setTempDate(rs1.getString("Date"));
                         }
                     }
-                    pst = connection.prepareStatement("SELECT * from tab1 where idtab1=?");
-                    pst.setInt(1, temp_IDname);
-                    try(ResultSet rs0 = pst.executeQuery()) {
-                        while (rs0.next()) {
-                            temp_userName = rs0.getString("name");
+                    if(!getTempFlightName().equals(" ")) {
+                        pst = connection.prepareStatement("SELECT * from tab1 where idtab1=?");
+                        pst.setInt(1, tempIdName);
+                        try (ResultSet rs0 = pst.executeQuery()) {
+                            while (rs0.next()) {
+                                setTempUserName(rs0.getString("name"));
+                            }
                         }
-                    }
-                    oblist.add(new ModelTicket(temp_id, temp_userName, temp_flightName, temp_hour));
 
-                    table_id.setCellValueFactory(new PropertyValueFactory("id"));
-                    table_name.setCellValueFactory(new PropertyValueFactory("id_user"));
-                    table_flight.setCellValueFactory(new PropertyValueFactory("id_fl"));
-                    table_hour.setCellValueFactory(new PropertyValueFactory("Hour"));
-                    table_view.setItems(oblist);
+                        oblist.add(new ModelTicket(tempId, getTempUserName(), getTempFlightName(), getTempDate()));
+
+                        idTable.setCellValueFactory(new PropertyValueFactory("id"));
+                        nameTable.setCellValueFactory(new PropertyValueFactory("id_user"));
+                        flightTable.setCellValueFactory(new PropertyValueFactory("id_fl"));
+                        dateTable.setCellValueFactory(new PropertyValueFactory("date"));
+                        table.setItems(oblist);
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String timeZone() {
+        TimeZone tz = TimeZone.getTimeZone("Europe/Moscow");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        dateFormat.setTimeZone(tz);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String mark = dateFormat.format(calendar.getTime());
+        return mark;
+    }
+
+
+    @FXML
+    void close() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void minimize() {
+        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
+        stage.setIconified(true);
     }
 }

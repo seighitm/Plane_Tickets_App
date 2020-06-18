@@ -18,12 +18,12 @@
                 <Image url="@../image/blue.png" />
             </image>
         </ImageView>
-        <Label fx:id="deleteLabel" layoutX="60.0" layoutY="520.0" text="Delete Succesfull" textFill="#dd5d5b">
+        <Label fx:id="deleteLabel" layoutX="60.0" layoutY="520.0" text="Delete Succesfull!" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>
         </Label>
-        <Label fx:id="notFoundLabel" layoutX="82.0" layoutY="520.0" text="Not found" textFill="#dd5d5b">
+        <Label fx:id="notFoundLabel" layoutX="82.0" layoutY="520.0" text="Not found!" textFill="#dd5d5b">
             <font>
                 <Font size="15.0" />
             </font>

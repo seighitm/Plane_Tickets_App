@@ -28,33 +28,33 @@
                   <Image url="@../image/blue-gradient.png" />
                </image>
             </ImageView>
-            <Label layoutX="46.0" layoutY="214.0" text="Welcome!" textFill="WHITE">
+            <Label layoutX="46.0" layoutY="198.0" text="Welcome!" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="31.0" />
                </font>
             </Label>
-            <Line endX="41.5" layoutX="148.0" layoutY="185.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
-            <Button fx:id="id_view" layoutX="45.0" layoutY="302.0" onMouseClicked="#viewFlights" prefWidth="142.0" text="View flights">
+            <Line endX="41.5" layoutX="153.0" layoutY="175.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+            <Button fx:id="id_view" layoutX="52.0" layoutY="316.0" onMouseClicked="#viewFlights" prefWidth="142.0" text="View flights">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="id_inf" layoutX="48.0" layoutY="368.0" onMouseClicked="#generalInformation" prefWidth="142.0" text="General informaton">
+            <Button fx:id="id_inf" layoutX="52.0" layoutY="373.0" onMouseClicked="#generalInformation" prefWidth="142.0" text="General informaton">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <ImageView fitHeight="130.0" fitWidth="130.0" layoutX="47.0" layoutY="27.0">
+            <ImageView fitHeight="130.0" fitWidth="130.0" layoutX="58.0" layoutY="34.0">
                <image>
                   <Image url="@../image/aviaTrans.png" />
                </image>
             </ImageView>
-            <Label layoutX="57.0" layoutY="141.0" prefHeight="38.0" prefWidth="67.0" text="Avia" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
+            <Label layoutX="61.0" layoutY="139.0" prefHeight="38.0" prefWidth="67.0" text="Avia" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
                <font>
                   <Font name="System Bold" size="26.0" />
                </font>
             </Label>
-            <Label layoutX="115.0" layoutY="141.0" prefHeight="38.0" prefWidth="67.0" text="Trans" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
+            <Label layoutX="119.0" layoutY="139.0" prefHeight="38.0" prefWidth="67.0" text="Trans" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
                <font>
                   <Font size="26.0" />
                </font>

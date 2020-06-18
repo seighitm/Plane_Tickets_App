@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Button?>
-<AnchorPane prefHeight="600.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.AddFlightsController">
+<AnchorPane prefHeight="575.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Worker.AddFlightsController">
    <children>
-      <Label layoutX="224.0" layoutY="113.0" text="Add a flight">
+      <ImageView fitHeight="575.0" fitWidth="550.0">
+         <image>
+            <Image url="@../image/blue2.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="224.0" layoutY="113.0" text="Add a flight" textFill="WHITE">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-      <TextField fx:id="field_location" layoutX="200.0" layoutY="163.0" prefHeight="25.0" prefWidth="171.0" promptText="Location" />
-      <TextField fx:id="field_destination" layoutX="200.0" layoutY="213.0" prefHeight="25.0" prefWidth="171.0" promptText="Destination" />
-      <TextField fx:id="field_price" layoutX="200.0" layoutY="263.0" prefHeight="25.0" prefWidth="171.0" promptText="Price" />
-      <DatePicker fx:id="field_date" layoutX="200.0" layoutY="313.0" promptText="Date" />
-      <TextField fx:id="field_hours" layoutX="200.0" layoutY="363.0" prefHeight="25.0" prefWidth="171.0" promptText="Hour" />
-      <TextField fx:id="field_seats" layoutX="200.0" layoutY="413.0" prefHeight="25.0" prefWidth="171.0" promptText="Seats" />
-      <Hyperlink fx:id="id_clear1" layoutX="200.0" layoutY="463.0" onMouseClicked="#clear_textField" text="Clear" />
-      <Button fx:id="id_ok1" layoutX="258.0" layoutY="463.0" onMouseClicked="#add_flight" prefHeight="25.0" prefWidth="110.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="Add" />
+      <TextField fx:id="locationField" layoutX="200.0" layoutY="163.0" prefHeight="25.0" prefWidth="171.0" />
+      <TextField fx:id="destinationField" layoutX="200.0" layoutY="213.0" prefHeight="25.0" prefWidth="171.0" />
+      <TextField fx:id="priceField" layoutX="200.0" layoutY="263.0" prefHeight="25.0" prefWidth="171.0" />
+      <DatePicker fx:id="dateField" layoutX="200.0" layoutY="313.0" />
+      <TextField fx:id="hoursField" layoutX="200.0" layoutY="363.0" prefHeight="25.0" prefWidth="81.0" />
+      <TextField fx:id="minutesField" layoutX="293.0" layoutY="363.0" prefHeight="25.0" prefWidth="81.0" />
+      <TextField fx:id="seatsField" layoutX="200.0" layoutY="413.0" prefHeight="25.0" prefWidth="171.0" />
+      <Hyperlink fx:id="id_clear1" layoutX="200.0" layoutY="463.0" onMouseClicked="#clearTextField" text="Clear" textFill="WHITE" underline="true">
+         <font>
+            <Font size="13.0" />
+         </font></Hyperlink>
+      <Button fx:id="id_ok1" layoutX="258.0" layoutY="463.0" onMouseClicked="#addFlights" prefHeight="25.0" prefWidth="110.0" text="Add" />
+      <Label layoutX="200.0" layoutY="145.0" text="Location" textFill="WHITE" />
+      <Label layoutX="200.0" layoutY="196.0" text="Destination" textFill="WHITE" />
+      <Label layoutX="200.0" layoutY="246.0" text="Price (USD)" textFill="WHITE" />
+      <Label layoutX="200.0" layoutY="296.0" text="Date" textFill="WHITE" />
+      <Label layoutX="200.0" layoutY="346.0" text="Hour" textFill="WHITE" />
+      <Label layoutX="200.0" layoutY="396.0" text="Seats" textFill="WHITE" />
+      <Label layoutX="293.0" layoutY="346.0" text="Minutes" textFill="WHITE" />
+      <Pane fx:id="succesAdded" layoutX="200.0" layoutY="525.0" prefHeight="17.0" prefWidth="171.0" style="-fx-background-color: #2D3447; -fx-background-radius: 10;">
+         <children>
+            <Label layoutX="11.0" layoutY="-1.0" text="The flight has been added" textFill="#7884ff">
+               <font>
+                  <Font size="13.0" />
+               </font></Label>
+         </children>
+      </Pane>
    </children>
-
 </AnchorPane>
