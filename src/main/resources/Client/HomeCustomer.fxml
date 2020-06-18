@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -9,64 +10,74 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="home_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Client.HomeCustomerController">
    <children>
-      <AnchorPane fx:id="main_page" layoutX="230.0" prefHeight="600.0" prefWidth="570.0">
-         <children>
-            <ImageView fitHeight="600.0" fitWidth="570.0">
-               <image>
-                  <Image url="@../image/customerHome.png" />
-               </image>
-            </ImageView>
-            <Pane layoutX="502.0" prefHeight="59.0" prefWidth="64.0" />
-         </children>
-      </AnchorPane>
       <Pane prefHeight="600.0" prefWidth="230.0" style="-fx-background-color: #2D3447;">
          <children>
-            <Line endX="41.5" layoutX="148.0" layoutY="523.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
-            <Label layoutX="57.0" layoutY="100.0" prefHeight="38.0" prefWidth="67.0" text="Avia" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
-               <font>
-                  <Font name="System Bold" size="26.0" />
-               </font>
-            </Label>
-            <Label layoutX="115.0" layoutY="100.0" prefHeight="38.0" prefWidth="67.0" text="Trans" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Label>
-            <Line endX="41.5" layoutX="148.0" layoutY="144.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
-            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="66.0" layoutY="2.0">
+            <ImageView fitHeight="600.0" fitWidth="250.0">
+               <image>
+                  <Image url="@../image/blue-gradient.png" />
+               </image>
+            </ImageView>
+            <Line endX="41.5" layoutX="153.0" layoutY="509.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+            <Line endX="41.5" layoutX="153.0" layoutY="175.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+            <ImageView fitHeight="130.0" fitWidth="130.0" layoutX="58.0" layoutY="34.0">
                <image>
                   <Image url="@../image/aviaTrans.png" />
                </image>
             </ImageView>
-            <Label fx:id="id_lab" layoutX="35.0" layoutY="166.0" prefHeight="35.0" prefWidth="169.0" text="Personal cabinet" textFill="WHITE">
+            <Label fx:id="id_lab" layoutX="42.0" layoutY="195.0" prefHeight="35.0" prefWidth="169.0" text="Personal cabinet" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>
             </Label>
-            <Button fx:id="id_my" layoutX="48.0" layoutY="251.0" onMouseClicked="#my_tickets" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="My future flights">
+            <Button fx:id="id_my" layoutX="52.0" layoutY="286.0" onMouseClicked="#myTickets" prefWidth="142.0" text="My tickets">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="id_view" layoutX="48.0" layoutY="316.0" onMouseClicked="#view_flights" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="View flights">
+            <Button fx:id="id_view" layoutX="52.0" layoutY="343.0" onMouseClicked="#viewFlights" prefWidth="142.0" text="View flights">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="id_inf" layoutX="48.0" layoutY="381.0" onMouseClicked="#gen_inf" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="General informaton">
+            <Button fx:id="id_inf" layoutX="52.0" layoutY="398.0" onMouseClicked="#generalInformation" prefWidth="142.0" text="General informaton">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="exit_button" layoutX="48.0" layoutY="545.0" onMouseClicked="#exit" prefWidth="142.0" style="-fx-background-color: #7eb5ec; -fx-background-radius: 20;" text="EXIT">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
+            <Pane prefHeight="26.0" prefWidth="800.0" style="-fx-background-color: #2D3447;">
+               <children>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="750.0" layoutY="3.0" onMouseClicked="#minimize">
+                     <image>
+                        <Image url="@../image/circl.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="minimizeCloseIcon" fitHeight="20.0" fitWidth="20.0" layoutX="777.0" layoutY="3.0" onMouseClicked="#close">
+                     <image>
+                        <Image url="@../image/interfac.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="exit" fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="3.0" onMouseClicked="#exitIcon">
+                     <image>
+                        <Image url="@../image/return.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
          </children>
       </Pane>
+      <AnchorPane fx:id="main_page" layoutX="248.0" layoutY="25.0" prefHeight="575.0" prefWidth="550.0">
+         <children>
+            <ImageView fitHeight="575.0" fitWidth="550.0" layoutX="2.0">
+               <image>
+                  <Image url="@../image/customerHome.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
    </children>
+   <stylesheets>
+      <URL value="@../style.css" />
+   </stylesheets>
 </AnchorPane>

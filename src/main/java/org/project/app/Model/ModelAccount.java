@@ -3,12 +3,11 @@ package org.project.app.Model;
 public class ModelAccount {
     int idtab1;
     String name;
-    String pass;
     String email;
-    String phone;
+    int phone;
     String pers;
 
-    public ModelAccount(int idtab1, String name, String email, String phone, String pers) {
+    public ModelAccount(int idtab1, String name, String email, int phone, String pers) {
         this.idtab1 = idtab1;
         this.name = name;
         this.email = email;
@@ -40,11 +39,11 @@ public class ModelAccount {
         this.email = email;
     }
 
-    public String getPhone() {
+    public int getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(int phone) {
         this.phone = phone;
     }
 
