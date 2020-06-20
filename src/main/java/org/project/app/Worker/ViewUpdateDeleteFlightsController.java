@@ -9,19 +9,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.project.app.Connection.DBHandler;
 import org.project.app.Model.ModelViewFlight;
-
+import org.project.app.abstractGeneral;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -36,42 +32,42 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ViewUpdateDeleteFlightsController implements Initializable{
+public class ViewUpdateDeleteFlightsController extends abstractGeneral implements Initializable{
 
     @FXML
     private AnchorPane anchorPage;
     @FXML
-    private TextField locationField;
+    public TextField locationField;
     @FXML
-    private TextField destinationField;
+    public TextField destinationField;
     @FXML
-    private TextField monthField;
+    public TextField monthField;
     @FXML
-    private TextField dayField;
+    public TextField dayField;
     @FXML
-    private TextField yearField;
+    public TextField yearField;
     @FXML
-    private TextField priceField;
+    public TextField priceField;
     @FXML
-    private TextField idField;
+    public TextField idField;
     @FXML
-    private TextField hourField;
+    public TextField hourField;
     @FXML
-    private TextField minutesField;
+    public TextField minutesField;
     @FXML
-    private TextField seatsField;
+    public TextField seatsField;
     @FXML
     public Button searchButton;
     @FXML
     public Button deleteButton;
     @FXML
-    private Label updateLabel;
+    public Label updateLabel;
     @FXML
-    private Label deleteLabel;
+    public Label deleteLabel;
     @FXML
-    private Label notFoundLabel;
+    public Label notFoundLabel;
     @FXML
-    private Label notIdLabel;
+    public Label notIdLabel;
     @FXML
     private TextField dateSearchField;
     @FXML
@@ -79,23 +75,21 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     @FXML
     private TextField destinationSearchField;
     @FXML
-    private TableView<ModelViewFlight> table;
+    public TableView<ModelViewFlight> table;
     @FXML
-    private TableColumn<ModelViewFlight, String> idTable;
+    public TableColumn<ModelViewFlight, String> idTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> destinationTable;
+    public TableColumn<ModelViewFlight, String> destinationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> locationTable;
+    public TableColumn<ModelViewFlight, String> locationTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> dateTable;
+    public TableColumn<ModelViewFlight, String> dateTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> priceTable;
+    public TableColumn<ModelViewFlight, String> priceTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> hourTable;
+    public TableColumn<ModelViewFlight, String> hourTable;
     @FXML
-    private TableColumn<ModelViewFlight, String> seatsTable;
-    @FXML
-    private ImageView minimizeCloseIcon;
+    public TableColumn<ModelViewFlight, String> seatsTable;
 
     private DBHandler handler;
     private PreparedStatement pst;
@@ -137,7 +131,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
             }
             if(nrRecords == 0) {
                 createViewTable();
-                alertWindows(1);
+                alertWindow(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -201,7 +195,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     }
 
     @FXML
-    public void refresh_button(MouseEvent mouseEvent) {
+    public void refreshButton() {
         setCellTable();
     }
 
@@ -300,7 +294,7 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
     }
 
     @FXML
-    public void deleteFlight(MouseEvent mouseEvent) {
+    public void deleteFlight() {
         deleteLabel.setVisible(false);
         notFoundLabel.setVisible(false);
         updateLabel.setVisible(false);
@@ -372,38 +366,18 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
                     }
                 }
             }else if(!matcher0.matches()) {
-                alertWindows(3);
+                alertWindow(12);
             }else if(!matcher2.matches() || !matcher1.matches()) {
-                alertWindows(4);
+                alertWindow(13);
             }else if(!matcher4.matches() || !matcher5.matches() || !matcher6.matches()){
-                alertWindows(2);
+                alertWindow(11);
             }else if(!matcher3.matches()){
-                alertWindows(5);
+                alertWindow(14);
             }
         }else{
             setVisibleLabel(1);
         }
 
-    }
-
-    public void alertWindows(int index)
-    {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alert.png"));
-        if(index == 1) {
-            alert.setContentText("No flights were found!");
-        }else if(index == 2){
-            alert.setContentText("Wrong date format!");
-        }else if(index==3){
-            alert.setContentText("Wrong price format!");
-        }else if(index==4){
-            alert.setContentText("Wrong hour format!");
-        }else if(index==5){
-            alert.setContentText("Wrong format of the number of seats!");
-        }
-        alert.show();
     }
 
     public ObservableList<ModelViewFlight> refresh_automatic() {
@@ -448,17 +422,5 @@ public class ViewUpdateDeleteFlightsController implements Initializable{
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         String mark = dateFormat.format(calendar.getTime());
         return mark;
-    }
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
     }
 }

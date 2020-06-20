@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="home_page" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Client.HomeCustomerController">
+<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.app.Client.HomeCustomerController">
    <children>
       <Pane prefHeight="600.0" prefWidth="230.0" style="-fx-background-color: #2D3447;">
          <children>
@@ -58,7 +58,7 @@
                         <Image url="@../image/interfac.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="exit" fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="3.0" onMouseClicked="#exitIcon">
+                  <ImageView fx:id="exit" fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="3.0" onMouseClicked="#exit">
                      <image>
                         <Image url="@../image/return.png" />
                      </image>

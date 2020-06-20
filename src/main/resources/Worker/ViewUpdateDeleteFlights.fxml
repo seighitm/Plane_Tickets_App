@@ -55,7 +55,7 @@
                 <TextField fx:id="destinationSearchField" layoutX="285.0" layoutY="569.0" prefHeight="25.0" prefWidth="135.0" />
                 <TextField fx:id="dateSearchField" layoutX="428.0" layoutY="569.0" prefHeight="25.0" prefWidth="135.0" />
                 <Button fx:id="id_update2" layoutX="76.0" layoutY="569.0" onMouseClicked="#searchFlightsSystem" prefHeight="16.0" prefWidth="60.0" text="Search" />
-                <Button fx:id="id_ref" layoutY="569.0" onMouseClicked="#refresh_button" prefHeight="25.0" prefWidth="69.0" text="Refresh" />
+                <Button fx:id="id_ref" layoutY="569.0" onMouseClicked="#refreshButton" prefHeight="25.0" prefWidth="69.0" text="Refresh" />
                 <Label layoutX="148.0" layoutY="552.0" text="Location" textFill="WHITE">
                     <font>
                         <Font size="11.0" />
@@ -143,7 +143,7 @@
                         <Image url="@../image/circl.png" />
                     </image>
                 </ImageView>
-                <ImageView fx:id="minimizeCloseIcon1" fitHeight="20.0" fitWidth="20.0" layoutX="777.0" layoutY="3.0" onMouseClicked="#close">
+                <ImageView fx:id="minimizeCloseIcon" fitHeight="20.0" fitWidth="20.0" layoutX="777.0" layoutY="3.0" onMouseClicked="#close">
                     <image>
                         <Image url="@../image/interfac.png" />
                     </image>

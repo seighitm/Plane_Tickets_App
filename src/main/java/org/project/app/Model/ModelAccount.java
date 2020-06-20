@@ -4,10 +4,10 @@ public class ModelAccount {
     int idtab1;
     String name;
     String email;
-    int phone;
+    String phone;
     String pers;
 
-    public ModelAccount(int idtab1, String name, String email, int phone, String pers) {
+    public ModelAccount(int idtab1, String name, String email, String phone, String pers) {
         this.idtab1 = idtab1;
         this.name = name;
         this.email = email;
@@ -39,11 +39,11 @@ public class ModelAccount {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

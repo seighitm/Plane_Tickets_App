@@ -21,8 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.project.app.Connection.DBHandler;
 import org.project.app.Model.ModelTicket;
@@ -41,8 +39,6 @@ public class ViewTicketsController implements  Initializable{
     private TableColumn<ModelTicket, String> dateTable;
     @FXML
     private TableColumn<ModelTicket, String> actionTable;
-    @FXML
-    private ImageView minimizeCloseIcon;
 
     private DBHandler handler;
     private PreparedStatement pst;
@@ -84,8 +80,7 @@ public class ViewTicketsController implements  Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        handler = new DBHandler();
-        connection = handler.getConnection();
+        createConnection();
         viewTickets();
     }
 
@@ -143,39 +138,9 @@ public class ViewTicketsController implements  Initializable{
                                             } else {
                                                 btn.setOnAction(event -> {
                                                     ModelTicket curse = getTableView().getItems().get(getIndex());
-                                                    int temp_nr = 0;
-                                                    String select = "SELECT * from tab3 where ID=?";
-                                                    try {
-                                                        pst = connection.prepareStatement(select);
-                                                        pst.setInt(1, curse.getId());
-                                                        try(ResultSet rs2 = pst.executeQuery()) {
-                                                            while (rs2.next()) {
-                                                                temp_nr = rs2.getInt("id_air");
-                                                            }
-                                                        }
-                                                    } catch (SQLException e) {
-                                                        e.printStackTrace();
-                                                    }
-
-                                                    String delete = "DELETE FROM tab3 WHERE ID=?";
-                                                    try {
-                                                        pst = connection.prepareStatement(delete);
-                                                        pst.setInt(1, curse.getId());
-                                                        pst.execute();
-                                                        table.getItems().clear();
-                                                        viewTickets();
-                                                    } catch (SQLException e) {
-                                                        e.printStackTrace();
-                                                    }
-
-                                                    String update = "UPDATE tab2 SET Seats=Seats+1 where ID=?";
-                                                    try {
-                                                        pst = connection.prepareStatement(update);
-                                                        pst.setInt(1, temp_nr);
-                                                        pst.executeUpdate();
-                                                    } catch (SQLException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                    cancelTicket(curse);
+                                                    table.getItems().clear();
+                                                    viewTickets();
                                                 });
                                                 setGraphic(empty ? null : btn);
                                                 setText(null);
@@ -196,48 +161,50 @@ public class ViewTicketsController implements  Initializable{
         }
     }
 
-    void refreshViewTickets()
-    {
-        table.getItems().clear();
+    public void createConnection(){
+        handler = new DBHandler();
+        connection = handler.getConnection();
+    }
+
+    public void cancelTicket(ModelTicket curse){
+        int temp_nr = 0;
+        String select = "SELECT * from tab3 where ID=?";
         try {
-            pst = connection.prepareStatement("SELECT * from tab3 where ");
-            try(ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    tempId = rs.getInt("id");
-                    tempIdName = rs.getInt("id_user");
-                    tempIdFlights = rs.getInt("id_air");
-
-                    pst = connection.prepareStatement("SELECT * from tab2 where ID=? and Date>?");
-                    setTempFlightName(" ");
-                    pst.setInt(1, tempIdFlights);
-                    pst.setString(2, timeZone());
-                    try(ResultSet rs1 = pst.executeQuery()) {
-                        while (rs1.next()) {
-                            setTempFlightName(rs1.getString("Destination") + "-" + rs1.getString("Location"));
-                            setTempDate(rs1.getString("Date"));
-                        }
-                    }
-                    if(!getTempFlightName().equals(" ")) {
-                        pst = connection.prepareStatement("SELECT * from tab1 where idtab1=?");
-                        pst.setInt(1, tempIdName);
-                        try (ResultSet rs0 = pst.executeQuery()) {
-                            while (rs0.next()) {
-                                setTempUserName(rs0.getString("name"));
-                            }
-                        }
-
-                        oblist.add(new ModelTicket(tempId, getTempUserName(), getTempFlightName(), getTempDate()));
-
-                        idTable.setCellValueFactory(new PropertyValueFactory("id"));
-                        nameTable.setCellValueFactory(new PropertyValueFactory("id_user"));
-                        flightTable.setCellValueFactory(new PropertyValueFactory("id_fl"));
-                        dateTable.setCellValueFactory(new PropertyValueFactory("date"));
-                        table.setItems(oblist);
-                    }
+            pst = connection.prepareStatement(select);
+            pst.setInt(1, curse.getId());
+            try(ResultSet rs2 = pst.executeQuery()) {
+                while (rs2.next()) {
+                    temp_nr = rs2.getInt("id_air");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        String delete = "DELETE FROM tab3 WHERE ID=?";
+        try {
+            pst = connection.prepareStatement(delete);
+            pst.setInt(1, curse.getId());
+            pst.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String update = "UPDATE tab2 SET Seats=Seats+1 where ID=?";
+        try {
+            pst = connection.prepareStatement(update);
+            pst.setInt(1, temp_nr);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection(){
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
@@ -251,18 +218,5 @@ public class ViewTicketsController implements  Initializable{
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         String mark = dateFormat.format(calendar.getTime());
         return mark;
-    }
-
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
     }
 }

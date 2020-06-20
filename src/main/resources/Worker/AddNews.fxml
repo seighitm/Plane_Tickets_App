@@ -21,7 +21,7 @@
       <TextArea fx:id="textField" layoutX="25.0" layoutY="88.0" prefHeight="445.0" prefWidth="501.0" promptText="Text (max 1500 caracter)" />
       <Button fx:id="id_add" layoutX="377.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#addNews" prefHeight="25.0" prefWidth="149.0" text="Add" />
       <Button fx:id="id_view" layoutX="201.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#viewNews" prefHeight="25.0" prefWidth="149.0" text="View all" />
-      <Pane fx:id="succesAdded" layoutX="190.0" layoutY="547.0" prefHeight="17.0" prefWidth="171.0" style="-fx-background-color: #2D3447; -fx-background-radius: 10;">
+      <Pane fx:id="successAdded" layoutX="190.0" layoutY="547.0" prefHeight="17.0" prefWidth="171.0" style="-fx-background-color: #2D3447; -fx-background-radius: 10;">
          <children>
             <Label layoutX="11.0" layoutY="-1.0" text="The news has been added" textFill="#7884ff">
                <font>

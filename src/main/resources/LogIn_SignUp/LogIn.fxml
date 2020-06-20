@@ -44,7 +44,7 @@
                         <Image url="@../image/user.png" />
                     </image>
                 </ImageView>
-                <TextField fx:id="usernameField" layoutX="119.0" layoutY="193.0" prefHeight="25.0" prefWidth="220.0" promptText="Email" style="--focus-color: #2196f3;" />
+                <TextField fx:id="emailField" layoutX="119.0" layoutY="193.0" prefHeight="25.0" prefWidth="220.0" promptText="Email" style="--focus-color: #2196f3;" />
                 <PasswordField fx:id="passwordField" layoutX="119.0" layoutY="254.0" prefHeight="25.0" prefWidth="220.0" promptText="Password" style="--focus-color: #2196f3;" />
                 <Button fx:id="id_login" layoutX="119.0" layoutY="304.0" onMouseClicked="#loginButton" prefHeight="35.0" prefWidth="220.0" text="Login" textAlignment="CENTER" />
                 <Hyperlink fx:id="id_skip" layoutX="119.0" layoutY="357.0" onMouseClicked="#skip" text="Skip">
