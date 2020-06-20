@@ -42,7 +42,7 @@
       <Label layoutX="200.0" layoutY="346.0" text="Hour" textFill="WHITE" />
       <Label layoutX="200.0" layoutY="396.0" text="Seats" textFill="WHITE" />
       <Label layoutX="293.0" layoutY="346.0" text="Minutes" textFill="WHITE" />
-      <Pane fx:id="succesAdded" layoutX="200.0" layoutY="525.0" prefHeight="17.0" prefWidth="171.0" style="-fx-background-color: #2D3447; -fx-background-radius: 10;">
+      <Pane fx:id="successAdded" layoutX="200.0" layoutY="525.0" prefHeight="17.0" prefWidth="171.0" style="-fx-background-color: #2D3447; -fx-background-radius: 10;">
          <children>
             <Label layoutX="11.0" layoutY="-1.0" text="The flight has been added" textFill="#7884ff">
                <font>

@@ -1,83 +1,52 @@
 package org.project.app.Admin;
 
 import java.net.URL;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.fxml.FXML;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
-import java.io.IOException;
 import java.util.ResourceBundle;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import java.sql.PreparedStatement;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.input.MouseEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.project.app.Connection.DBHandler;
-import org.project.app.LogIn_SignUp.LoginController;
+import org.project.app.abstractHome;
 import org.project.app.Model.ModelAccount;
 
-public class HomeAdminPage implements Initializable {
+public class HomeAdmin extends abstractHome implements Initializable {
 
     @FXML
-    private TableView<ModelAccount> table;
+    public TableView<ModelAccount> table;
     @FXML
-    private TableColumn<ModelAccount, Integer> idtab1;
+    public TableColumn<ModelAccount, Integer> idtab1;
     @FXML
-    private TableColumn<ModelAccount, String> name;
+    public TableColumn<ModelAccount, String> name;
     @FXML
-    private TableColumn<ModelAccount, String> email;
+    public TableColumn<ModelAccount, String> email;
     @FXML
-    private TableColumn<ModelAccount, String> phone;
+    public TableColumn<ModelAccount, String> phone;
     @FXML
-    private TableColumn<ModelAccount, String> pers;
+    public TableColumn<ModelAccount, String> pers;
     @FXML
-    private TableColumn<ModelAccount, String> action;
-    @FXML
-    private AnchorPane Home;
-    @FXML
-    private ImageView id_exit;
-    @FXML
-    private ImageView minimizeCloseIcon;
+    public TableColumn<ModelAccount, String> action;
 
     private DBHandler handler;
     private PreparedStatement pst;
     private Connection connection;
 
     ObservableList<ModelAccount> oblist = FXCollections.observableArrayList();
-    LoginController loginController = new LoginController();
 
     public void initialize(URL location, ResourceBundle resources) {
         handler = new DBHandler();
         connection = handler.getConnection();
         setViewTable();
-    }
-
-    //exit button
-    @FXML
-    public void exit(MouseEvent mouseEvent) {
-        if (alertWindows(1)){
-            try {
-                setPage(Home, "/LogIn_SignUp/LogIn.fxml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        loginController.setAutomationLogin(2);
     }
 
     //database reading
@@ -101,13 +70,21 @@ public class HomeAdminPage implements Initializable {
                         type_account = "customer";
                     else
                         type_account = "ADMIN";
-                    temp.add(new ModelAccount(rs.getInt("idtab1"), rs.getString("name"), rs.getString("email"), rs.getInt("phone"), type_account));
+                    temp.add(new ModelAccount(rs.getInt("idtab1"), rs.getString("name"), rs.getString("email"), rs.getString("phone"), type_account));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return temp;
+    }
+
+    public void closeConnection(){
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     //sets the cells in the table with the information read from the database
@@ -141,30 +118,10 @@ public class HomeAdminPage implements Initializable {
                                             btn = new Button("Cancel");
                                             btn.setPrefWidth(67);
                                             btn.setOnAction(event -> {
-                                                /*String insert = "DELETE FROM tab1 WHERE idtab1=?";
-                                                try {
-                                                    pst = connection.prepareStatement(insert);
-                                                    pst.setInt(1, accounts.getIdtab1());
-                                                    pst.execute();
-                                                    table.getItems().clear();
-                                                    setCellTable();
-                                                } catch (SQLException e) {
-                                                    e.printStackTrace();
-                                                }*/
-                                                deleteMethod(accounts.getIdtab1());
+                                                deleteMethod(accounts.getEmail(), accounts.getPhone());
                                             });
                                         }else {
                                             btn.setOnAction(event -> {
-                                                /*String insert = "UPDATE tab1 SET pers=abs(pers) WHERE idtab1=?";
-                                                try {
-                                                    pst = connection.prepareStatement(insert);
-                                                    pst.setInt(1, accounts.getIdtab1());
-                                                    pst.executeUpdate();
-                                                    table.getItems().clear();
-                                                    setCellTable();
-                                                } catch (SQLException e) {
-                                                    e.printStackTrace();
-                                                }*/
                                                 validateMethod(accounts.getIdtab1());
                                             });
                                         }
@@ -185,12 +142,18 @@ public class HomeAdminPage implements Initializable {
         }
     }
 
+    public void createConnection(){
+        handler = new DBHandler();
+        connection = handler.getConnection();
+    }
+
     //method for deleting account
-    public void deleteMethod(int ID) {
-        String insert = "DELETE FROM tab1 WHERE idtab1=?";
+    public void deleteMethod(String email, String phone) {
+        String insert = "DELETE FROM tab1 WHERE email=? and phone=?";
         try {
             pst = connection.prepareStatement(insert);
-            pst.setInt(1, ID);
+            pst.setString(1, email);
+            pst.setString(2, phone);
             pst.execute();
             table.getItems().clear();
             setViewTable();
@@ -211,71 +174,5 @@ public class HomeAdminPage implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    //alert windows messages
-    public boolean alertWindows(int index) {
-        if(index == 1) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("Do you want to go out?");
-            alert.setContentText("Press the \"Ok\" button if you want to exit, otherwise press the \"Cancel\" button.");
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image("image/alert.png"));
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK)
-                return true;
-        }
-        return false;
-    }
-
-    //set new page
-    public void setPage(AnchorPane page, String patch) throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource(patch));
-        page.getChildren().setAll(pane);
-    }
-/*
-    public void openNewPage(Parent root, Stage stage)
-    {
-        try {
-            root = FXMLLoader.load(getClass().getResource("/FXML/Sign/LoginMain.fxml"));
-            root.setStyle("-fx-effect: innershadow(gaussian, #039ed3, 2, 1.0, 0, 0);");
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-            root.setOnMousePressed(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-            root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    stage.setX(event.getScreenX() - xOffset);
-                    stage.setY(event.getScreenY() - yOffset);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
- */
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
     }
 }

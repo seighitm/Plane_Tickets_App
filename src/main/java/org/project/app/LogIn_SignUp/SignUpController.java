@@ -8,54 +8,36 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.project.app.Connection.DBHandler;
-import org.project.app.LogIn_SignUp.LoginController;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignUpController implements Initializable{
+public class SignUpController extends abstractRegistration implements Initializable{
 
     @FXML
-    private AnchorPane anchorPane;
+    public TextField usernameField;
     @FXML
-    private TextField usernameField;
+    public TextField emailField;
     @FXML
-    private TextField emailField;
+    public TextField phoneField;
     @FXML
-    private TextField phoneField;
+    public PasswordField passwordField;
     @FXML
-    private PasswordField passwordField;
+    public RadioButton workerRadioButton;
     @FXML
-    private RadioButton workerRadioButton;
+    public RadioButton customerRadioButton;
     @FXML
-    private RadioButton customerRadioButton;
-    @FXML
-    private Label successfulRegistrationLabel;
-    @FXML
-    private ImageView minimizeCloseIcon;
+    public  Label successfulRegistrationLabel;
 
-    private DBHandler handler;
-    private PreparedStatement pst;
-    private Connection connection;
-
-    private final static String md5_code0 = "123";
-    private final static String md5_code1 = "456";
     private String passwordShow;
-    LoginController loginController = new LoginController();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -98,12 +80,12 @@ public class SignUpController implements Initializable{
         regex = "^[0-9]{1}[0-9]{3,14}$";
         Pattern pattern1 = Pattern.compile(regex);
         Matcher matcher1 = pattern1.matcher(phoneField.getText());
-        if(NonDuplicationEmailPhone() && matcher1.matches() && matcher0.matches() && getTypeAccount()!=0) {
+        if(nonDuplicationEmailPhone() && matcher1.matches() && matcher0.matches() && getTypeAccount()!=0) {
             String insert = "Insert INTO tab1(name, pass, email, pers, phone)" + "Values(?,?,?,?,?)";
             try {
                 pst = connection.prepareStatement(insert);
                 pst.setString(1, usernameField.getText());
-                pst.setString(2, loginController.getMd5(loginController.getMd5(loginController.getMd5(md5_code0+ passwordField.getText()) + loginController.getMd5(passwordField.getText()+md5_code1))));
+                pst.setString(2, getMd5(getMd5(getMd5(getMD50()+ passwordField.getText()) + getMd5(passwordField.getText()+getMD51()))));
                 pst.setString(3, emailField.getText());
                 pst.setInt(4, getTypeAccount());
                 pst.setString(5, phoneField.getText());
@@ -117,13 +99,13 @@ public class SignUpController implements Initializable{
             }
         } else if(usernameField.getText().equals("") || passwordField.getText().equals("") ||
                 emailField.getText().equals("") || phoneField.getText().equals("")){
-            alertWindow(0);
+            alertWindow(5);
         } else if(!matcher1.matches()){
-            alertWindow(1);
+            alertWindow(6);
         } else if(!matcher0.matches()) {
-            alertWindow(2);
-        } else if(!NonDuplicationEmailPhone()) {
-            alertWindow(3);
+            alertWindow(7);
+        } else if(!nonDuplicationEmailPhone()) {
+            alertWindow(8);
         }
     }
 
@@ -134,12 +116,12 @@ public class SignUpController implements Initializable{
         } else if (customerRadioButton.isSelected()) {
             pers = -2;
         } else {
-            alertWindow(4);
+            alertWindow(9);
         }
         return pers;
     }
 
-    public boolean NonDuplicationEmailPhone()  {
+    public boolean nonDuplicationEmailPhone()  {
         int nrRecords = 0;
         try {
             String q1 = "SELECT * from tab1 where email=? or phone=?";
@@ -157,36 +139,5 @@ public class SignUpController implements Initializable{
             return false;
         }
         return true;
-    }
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
-    }
-
-    public void alertWindow(int index) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alert.png"));
-        if(index==0){
-            alert.setContentText("You have not filled in all the fields!");
-        }else if(index==1){
-            alert.setContentText("Phone number is incorrect!");
-        }else if(index==2){
-            alert.setContentText("Email is incorrect!");
-        }else if(index==3){
-            alert.setContentText("Email or phone number has already been registered!");
-        }else if(index==4){
-            alert.setContentText("You have not chosen the account type!");
-        }
-        alert.show();
     }
 }

@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import javafx.scene.input.MouseEvent;
 
 public class Main extends Application {
@@ -19,7 +18,6 @@ public class Main extends Application {
     private double yOffset = 0;
     @Override
     public void start(final Stage primaryStage) {
-
         try{
             Parent root = FXMLLoader.load(getClass().getResource("/LogIn_SignUp/LogIn.fxml"));
             Scene scene = new Scene(root, 800, 600);
@@ -36,7 +34,6 @@ public class Main extends Application {
                 }
             });
             root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-
                 public void handle(MouseEvent event) {
                     primaryStage.setX(event.getScreenX() - xOffset);
                     primaryStage.setY(event.getScreenY() - yOffset);

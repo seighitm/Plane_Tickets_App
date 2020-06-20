@@ -55,17 +55,16 @@ public class MyTicketController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        handler = new DBHandler();
-        connection = handler.getConnection();
+        createConnection();
         viewMyTicket();
     }
 
-    public void viewMyTicket() {
+    public ObservableList<ModelViewFlight> readFromDataBase(String username, String email){
         int tempID=0;
         try {
             pst = connection.prepareStatement("SELECT * from tab1 where name=? and email=?");
-            pst.setString(1, loginController.getTempUserName());
-            pst.setString(2, loginController.getTempUserEmail());
+            pst.setString(1, username);
+            pst.setString(2, email);
             try(ResultSet rs2 = pst.executeQuery()){
                 while(rs2.next()){
                     tempID=rs2.getInt("idtab1");
@@ -86,6 +85,17 @@ public class MyTicketController implements Initializable{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return oblist;
+    }
+
+    public void createConnection(){
+        handler = new DBHandler();
+        connection = handler.getConnection();
+    }
+
+
+    public void viewMyTicket() {
+        readFromDataBase(loginController.getTempUserName(),loginController.getTempUserEmail());
         idTable.setCellValueFactory(new PropertyValueFactory("ID"));
         locationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
         destinationTable.setCellValueFactory(new PropertyValueFactory("Location"));

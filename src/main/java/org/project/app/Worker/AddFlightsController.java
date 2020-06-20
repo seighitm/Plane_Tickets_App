@@ -1,7 +1,6 @@
 package org.project.app.Worker;
 
 import java.net.URL;
-
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import java.sql.ResultSet;
@@ -9,41 +8,35 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import java.sql.PreparedStatement;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.project.app.Connection.DBHandler;
-
+import org.project.app.abstractClass;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddFlightsController implements  Initializable{
+public class AddFlightsController extends abstractClass implements  Initializable{
 
     @FXML
-    private TextField locationField;
+    public TextField locationField;
     @FXML
-    private TextField destinationField;
+    public TextField destinationField;
     @FXML
-    private TextField priceField;
+    public TextField priceField;
     @FXML
-    private TextField hoursField;
+    public TextField hoursField;
     @FXML
-    private TextField minutesField;
+    public TextField minutesField;
     @FXML
-    private TextField seatsField;
+    public TextField seatsField;
     @FXML
-    private DatePicker dateField;
+    public DatePicker dateField;
     @FXML
-    private ImageView minimizeCloseIcon;
-    @FXML
-    private Pane succesAdded;
+    public Pane successAdded;
 
     private DBHandler handler;
     private PreparedStatement pst, aux;
@@ -51,13 +44,20 @@ public class AddFlightsController implements  Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        handler = new DBHandler();
-        connection = handler.getConnection();
-        succesAdded.setVisible(false);
+        createConnection();
+        successAdded.setVisible(false);
+    }
+
+    public void closeConnection(){
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @FXML
-    void addFlights() {
+    public void addFlights() {
         String regex = "^\\d{0,8}?$";
         Pattern pattern0 = Pattern.compile(regex);
         Matcher matcher0 = pattern0.matcher(priceField.getText());
@@ -83,46 +83,29 @@ public class AddFlightsController implements  Initializable{
                     pst.setInt(6, Integer.parseInt(seatsField.getText()));
                     pst.executeUpdate();
                     PauseTransition visiblePause = new PauseTransition(Duration.seconds(2));
-                    visiblePause.setOnFinished(event1 -> succesAdded.setVisible(false));
-                    succesAdded.setVisible(true);
+                    visiblePause.setOnFinished(event1 -> successAdded.setVisible(false));
+                    successAdded.setVisible(true);
                     visiblePause.play();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText(null);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image("image/alert.png"));
-                    alert.setContentText("This flight already exists!");
-                    alert.show();
+                    alertWindow(17);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }else if(!matcher0.matches()) {
-            alertWindow(0);
+            alertWindow(12);
         }else if(!matcher1.matches()){
-            alertWindow(1);
+            alertWindow(13);
         }else if(!matcher2.matches()){
-            alertWindow(2);
+            alertWindow(10);
         }else if(!matcher3.matches()){
-            alertWindow(3);
+            alertWindow(14);
         }
     }
 
-    public void alertWindow(int index) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alert.png"));
-        if(index==0){
-            alert.setContentText("Wrong price format!");
-        }else if(index==1){
-            alert.setContentText("Wrong hour format!");
-        }else if(index==2){
-            alert.setContentText("Wrong minute format!");
-        }else if(index==3){
-            alert.setContentText("Wrong format of the number of seats!");
-        }
-        alert.show();
+    public void createConnection(){
+        handler = new DBHandler();
+        connection = handler.getConnection();
     }
 
     @FXML
@@ -135,7 +118,7 @@ public class AddFlightsController implements  Initializable{
         seatsField.clear();
     }
 
-    boolean verificationExistingSameFlight() {
+    public boolean verificationExistingSameFlight() {
         String select = "SELECT * FROM tab2 where Destination=? and Location=? and Date=? and Price=? and Hour=? and Seats=?";
         int nrRecords = 0;
         try {
@@ -161,17 +144,5 @@ public class AddFlightsController implements  Initializable{
             return false;
         else
             return true;
-    }
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
     }
 }

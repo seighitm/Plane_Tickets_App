@@ -14,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.net.URL;
@@ -33,8 +32,9 @@ import org.project.app.Connection.DBHandler;
 import org.project.app.LogIn_SignUp.LoginController;
 import org.project.app.Model.ModelViewFlight;
 import javafx.util.Callback;
+import org.project.app.abstractGeneral;
 
-public class ViewFlightsController implements Initializable {
+public class ViewFlightsController extends abstractGeneral implements Initializable{
 
     @FXML
     private AnchorPane anchorPane;
@@ -57,27 +57,28 @@ public class ViewFlightsController implements Initializable {
     @FXML
     private TableColumn<ModelViewFlight, String> buttonTable;
     @FXML
-    private TextField dateField;
+    public TextField dateField;
     @FXML
-    private TextField destinationField;
+    public TextField destinationField;
     @FXML
-    private TextField locationField;
-    @FXML
-    private ImageView minimizeCloseIcon;
+    public TextField locationField;
 
-    private String EmailSend;
     private DBHandler handler;
     private PreparedStatement pst;
     private Connection connection;
 
     LoginController loginController = new LoginController();
-    ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
+    public  ObservableList<ModelViewFlight> oblist = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        createConnection();
+        viewFlight();
+    }
+
+    public void createConnection(){
         handler = new DBHandler();
         connection = handler.getConnection();
-        viewFlight();
     }
 
     @FXML
@@ -93,9 +94,10 @@ public class ViewFlightsController implements Initializable {
     }
 
     @FXML
-    void searchFlight() {
+    public int searchFlight() {
         try {
             table.getItems().clear();
+            createConnection();
             pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats!=? and Date>?");
             pst.setString(1, destinationField.getText());
             pst.setString(2, locationField.getText());
@@ -111,33 +113,39 @@ public class ViewFlightsController implements Initializable {
             }
             if(nrRecords == 0) {
                 alertWindow(1);
+                setCellTable();
+                return 1;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return 0;
     }
 
     @FXML
     public void refreshButton() {
-        refreshAutomation();
+        table.getItems().clear();
+        setCellTable();
     }
 
-    public void refreshAutomation() {
-        table.getItems().clear();
+    public ObservableList<ModelViewFlight> readFromDataBase() {
         try {
             pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
             pst.setInt(1, 0);
             pst.setString(2, timeZone());
             ResultSet rs = pst.executeQuery();
-            while(rs.next()) { {
+            while(rs.next()) {
                 oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
-            }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return oblist;
+    }
 
+    public void setCellTable(){
+        table.getItems().clear();
+        readFromDataBase();
         idTable.setCellValueFactory(new PropertyValueFactory("ID"));
         locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
         destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
@@ -145,7 +153,6 @@ public class ViewFlightsController implements Initializable {
         priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
         hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
         seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
-
     }
 
 
@@ -163,7 +170,7 @@ public class ViewFlightsController implements Initializable {
 
     public void viewFlight()
     {
-        refreshAutomation();
+        setCellTable();
         Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>> cellFactory
                 = //
                 new Callback<TableColumn<ModelViewFlight, String>, TableCell<ModelViewFlight, String>>() {
@@ -195,7 +202,7 @@ public class ViewFlightsController implements Initializable {
         table.setItems(oblist);
     }
 
-    void updateNrTickets(ModelViewFlight curse) {
+    public void updateNrTickets(ModelViewFlight curse) {
         String update = "UPDATE tab2 SET Seats=? WHERE ID=?";
         try {
             pst = connection.prepareStatement(update);
@@ -203,17 +210,19 @@ public class ViewFlightsController implements Initializable {
             curse.setSeats(aux);
             pst.setInt(1, curse.getSeats());
             pst.setInt(2, curse.getID());
-            if(alertConfirmationWindow(curse)){
+            if(alertConfirmationWindow(curse))
+            {
                 pst.executeUpdate();
                 addMyFlight(curse.getID());
-                refreshAutomation();
+                setCellTable();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    void addMyFlight(int airID) {
+    public void addMyFlight(int airID) {
+        createConnection();
         int temp_userID=0;
         try {
             String select = "SELECT * from tab1";
@@ -222,7 +231,6 @@ public class ViewFlightsController implements Initializable {
             while(rs.next()) {
                 if ((rs.getString("name").equals(loginController.getTempUserName())) && (rs.getString("email").equals(loginController.getTempUserEmail()))) {
                     temp_userID = rs.getInt("idtab1");
-                    EmailSend = rs.getString("email");
                 }
             }
         } catch (SQLException e) {
@@ -240,14 +248,12 @@ public class ViewFlightsController implements Initializable {
         }
     }
 
-    public void alertWindow(int index) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        if(index==1) {
-            alert.setContentText("No flights were found!");
-            refreshAutomation();
+    public void closeConnection(){
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        alert.show();
     }
 
     public boolean alertConfirmationWindow(ModelViewFlight curse) {
@@ -260,25 +266,8 @@ public class ViewFlightsController implements Initializable {
         stage.getIcons().add(new Image("image/alert.png"));
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
-           /* EmailSender emailSender = new EmailSender();
-            emailSender.sendEmail(EmailSend, "Location: " + curse.getLocation() + "\nDestinatia: " + curse.getDestination() +
-                    "\nData: " + curse.getDate() + "\nOra: " + curse.getHour() + "\nPretul: " + curse.getPrice());
-            */
             return true;
-
         }
         return false;
-    }
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
     }
 }

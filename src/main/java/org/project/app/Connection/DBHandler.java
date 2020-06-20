@@ -1,14 +1,15 @@
 package org.project.app.Connection;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
 public class DBHandler extends Configs{
-    Connection dbconnection;
+
+    private static String connectionString = "jdbc:mysql://" +Configs.dbhost + ":" + Configs.dbport + "/" + Configs.dbname+"?useUnicode=true&serverTimezone=UTC&useSSL=false&autoReconnect=true";
+
     public Connection getConnection()
     {
-        String connectionString = "jdbc:mysql://" +Configs.dbhost + ":" + Configs.dbport + "/" + Configs.dbname+"?useUnicode=true&serverTimezone=UTC&useSSL=false&autoReconnect=true";
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -21,5 +22,9 @@ public class DBHandler extends Configs{
             e.printStackTrace();
         }
         return dbconnection;
+    }
+
+    public void setConnectionString(String connectionString){
+        this.connectionString = connectionString;
     }
 }

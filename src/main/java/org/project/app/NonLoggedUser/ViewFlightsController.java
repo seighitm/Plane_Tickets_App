@@ -8,14 +8,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import org.project.app.Connection.DBHandler;
 import org.project.app.Model.ModelViewFlight;
-
+import org.project.app.abstractGeneral;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -28,7 +26,7 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-public class ViewFlightsController implements Initializable {
+public class ViewFlightsController extends abstractGeneral implements Initializable {
 
     @FXML
     private AnchorPane anchorPane;
@@ -77,35 +75,38 @@ public class ViewFlightsController implements Initializable {
             e.printStackTrace();
         }
     }
-
     @FXML
-    void searchFlight() {
-        ObservableList<ModelViewFlight> tempFlights = FXCollections.observableArrayList();
-        if(!destinationField.getText().isEmpty() && !locationField.getText().isEmpty() && !dateField.getText().isEmpty()) {
-            for (ModelViewFlight x : oblist) {
-                if (x.getDestination().equals(destinationField.getText()) || x.getLocation().equals(locationField.getText()) || x.getDate().equals(dateField.getText()))
-                    tempFlights.add(x);
+    void searchFlight(MouseEvent event) {
+        try {
+            table.getItems().clear();
+            pst = connection.prepareStatement("SELECT * from tab2 where Destination=? and Location=? and Date=? and Seats!=? and Date>?");
+            pst.setString(1, destinationField.getText());
+            pst.setString(2, locationField.getText());
+            pst.setString(3, dateField.getText());
+            pst.setInt(4, 0);
+            pst.setString(5, timeZone());
+            int nrRecords = 0;
+            try(ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    oblist.add(new ModelViewFlight(rs.getInt("ID"), rs.getString("Location"), rs.getString("Destination"), rs.getString("Date"), rs.getInt("Price"), rs.getString("Hour"), rs.getInt("Seats")));
+                    nrRecords++;
+                }
             }
-            idTable.setCellValueFactory(new PropertyValueFactory("ID"));
-            locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
-            destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
-            dateTable.setCellValueFactory(new PropertyValueFactory("Date"));
-            priceTable.setCellValueFactory(new PropertyValueFactory("Price"));
-            hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
-            seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
-            table.setItems(tempFlights);
-        }else{
-            alertWindows(1);
+            viewFlights();
+            if(nrRecords == 0) {
+                alertWindow(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public ObservableList<ModelViewFlight> viewFlights() {
+    public ObservableList<ModelViewFlight> readFromDataBase() {
         handler = new DBHandler();
         connection = handler.getConnection();
-        table.getItems().clear();
         try {
             pst = connection.prepareStatement("SELECT * from tab2 where Seats!=? and Date>?");
-            pst.setInt(1, 30);
+            pst.setInt(1, 0);
             pst.setString(2, timeZone());
             try(ResultSet rs = pst.executeQuery()){
                 while(rs.next()) {
@@ -115,7 +116,11 @@ public class ViewFlightsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return oblist;
+    }
 
+    public void viewFlights(){
+        readFromDataBase();
         idTable.setCellValueFactory(new PropertyValueFactory("ID"));
         locationTable.setCellValueFactory(new PropertyValueFactory("Location"));
         destinationTable.setCellValueFactory(new PropertyValueFactory("Destination"));
@@ -124,24 +129,12 @@ public class ViewFlightsController implements Initializable {
         hourTable.setCellValueFactory(new PropertyValueFactory("Hour"));
         seatsTable.setCellValueFactory(new PropertyValueFactory("Seats"));
         table.setItems(oblist);
-        return oblist;
     }
 
     @FXML
     public void refreshButton() {
+        table.getItems().clear();
         viewFlights();
-    }
-
-    public void alertWindows(int index)
-    {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(null);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("image/alert.png"));
-        if(index==1) {
-            alert.setContentText("Account is not validated.\nPlease try again later.");
-        }
-        alert.show();
     }
 
     public String timeZone() {

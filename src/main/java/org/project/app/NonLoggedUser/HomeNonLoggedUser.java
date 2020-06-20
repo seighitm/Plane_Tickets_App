@@ -1,18 +1,9 @@
 package org.project.app.NonLoggedUser;
 
 import javafx.fxml.FXML;
-import java.io.IOException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import org.project.app.abstractHome;
 
-public class HomeNonLoggedUser {
-
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private ImageView minimizeCloseIcon;
+public class HomeNonLoggedUser extends abstractHome {
 
     @FXML
     void generalInformation() {
@@ -22,32 +13,5 @@ public class HomeNonLoggedUser {
     @FXML
     void viewFlights()  {
         setPage(anchorPane, "/NonLoggedUser/ViewFlights.fxml");
-    }
-
-    @FXML
-    void close() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    void minimize() {
-        Stage stage = (Stage) minimizeCloseIcon.getScene().getWindow();
-        stage.setIconified(true);
-    }
-
-    public void setPage(AnchorPane page, String patch) {
-        AnchorPane pane = null;
-        try {
-            pane = FXMLLoader.load(getClass().getResource(patch));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        page.getChildren().setAll(pane);
-    }
-
-    @FXML
-    void exitIcon() {
-        setPage(anchorPane, "/LogIn_SignUp/LogIn.fxml");
     }
 }
