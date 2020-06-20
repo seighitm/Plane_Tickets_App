@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import static org.junit.Assert.*;
 
 public class ViewTest extends ApplicationTest {
-/*
+
     ViewNewsController viewNewsController = new ViewNewsController();
     AddFlightsController addFlightsController = new AddFlightsController();
     AddNewsController addNewsController = new AddNewsController();
@@ -412,5 +412,4 @@ public class ViewTest extends ApplicationTest {
             e.printStackTrace();
         }
     }
- */
 }
