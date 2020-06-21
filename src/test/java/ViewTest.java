@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import static org.junit.Assert.*;
 
 public class ViewTest extends ApplicationTest {
-/*
+    
     ViewNewsController viewNewsController = new ViewNewsController();
     AddFlightsController addFlightsController = new AddFlightsController();
     AddNewsController addNewsController = new AddNewsController();
@@ -35,7 +35,6 @@ public class ViewTest extends ApplicationTest {
     ViewFlightsController viewFlightsController = new ViewFlightsController();
     HomeAdmin homeAdminPage = new HomeAdmin();
     ViewUpdateDeleteFlightsController viewUpdateDeleteFlightsController = new ViewUpdateDeleteFlightsController();
-
     ModelViewFlight modelViewFlight = new ModelViewFlight(1, "B", "C", "2021-07-07", 2, "2:26", 8);
 
     @Before
@@ -270,7 +269,6 @@ public class ViewTest extends ApplicationTest {
                     signUpController.passwordField = new PasswordField();
                     signUpController.emailField = new TextField();
                     signUpController.phoneField = new TextField();
-
                     homeAdminPage.table = new TableView<>();
                     homeAdminPage.idtab1 = new TableColumn<>();
                     homeAdminPage.name = new TableColumn<>();
@@ -375,6 +373,7 @@ public class ViewTest extends ApplicationTest {
     public void AfterTest() {
         System.out.println("<After testing>");
     }
+    
 
     @AfterClass
     public static void s(){
@@ -412,5 +411,5 @@ public class ViewTest extends ApplicationTest {
             e.printStackTrace();
         }
     }
- */
+
 }
